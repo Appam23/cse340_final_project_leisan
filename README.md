@@ -10,4 +10,5 @@ A simple static website for the CSE340 final project.
 Update the text in `index.html` and adjust the layout/colors in `styles.css`.
 
 ## Deployment
-This site is intended to be deployed as a static site on Render.
+This site is deployed as a static site on Render: 
+https://cse340-final-project-leisan.onrender.com
