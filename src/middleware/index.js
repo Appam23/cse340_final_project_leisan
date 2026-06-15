@@ -21,5 +21,5 @@ export const setupMiddleware = (app) => {
   app.use(express.urlencoded({ extended: true }));
 
   // Static files: Serve CSS, images, etc. from /public folder
-  app.use(express.static(join(__dirname, '../public')));
+  app.use(express.static(join(__dirname, '../../public')));
 };

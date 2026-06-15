@@ -1,7 +1,7 @@
 :root {
   color-scheme: light;
-  --bg: #f6f1e8;
-  --bg-2: #e9e0d2;
+  --bg: #fff;
+  --bg-2: #ffffff;
   --text: #1f2730;
   --muted: #5f6b75;
   --card: rgba(255, 255, 255, 0.72);

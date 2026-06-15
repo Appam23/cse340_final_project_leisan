@@ -2,9 +2,9 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { setupMiddleware } from './middleware/index.js';
+import { setupMiddleware } from './src/middleware/index.js';
 import router from './routes/index.js';
-import { handle404, handle500 } from './controllers/errorController.js';
+import { handle404, handle500 } from './src/controllers/errorController.js';
 
 dotenv.config();
 
@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 4000;
 setupMiddleware(app);
 
 app.set('view engine', 'ejs');
-app.set('views', join(__dirname, 'views'));
+app.set('views', join(__dirname, 'src/views'));
 
 // Routes
 app.use('/', router);
