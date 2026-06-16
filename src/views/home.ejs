@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main class="page">
+      <p class="eyebrow">CSE340 Final Project</p>
+      <img class="car-photo" src="<%= carImage %>" alt="<%= carImageTitle || 'Car photo' %>">
+      <h1>Car Dealership</h1>
+      <p class="lead">Welcome to our car dealership website. Built with Node.js, Express, EJS, and PostgreSQL.</p>
+      <section class="api-card" aria-labelledby="api-heading">
+        <p class="api-kicker">Live Car API</p>
+        <h2 id="api-heading"><%= featuredMake %></h2>
+        <p class="api-copy"><%= apiMessage %></p>
+        <% if (carMakes && carMakes.length) { %>
+          <div class="make-grid" aria-label="Random car makes">
+            <% carMakes.forEach((make) => { %>
+              <span class="make-pill"><%= make %></span>
+            <% }) %>
+          </div>
+          <p class="api-meta">Showing <%= carMakes.length %> random makes from <%= apiCount %> total.</p>
+        <% } else { %>
+          <p class="api-meta">No car makes loaded yet.</p>
+        <% } %>
+      </section>
+
+      <% if (carImages && carImages.length) { %>
+        <section class="gallery-card" aria-labelledby="gallery-heading">
+          <p class="api-kicker">Live Car Images</p>
+          <h2 id="gallery-heading">More Cars From the API</h2>
+          <div class="gallery-grid">
+            <% carImages.forEach((image) => { %>
+              <figure class="gallery-item">
+                <img src="<%= image.src %>" alt="<%= image.title || 'Car image' %>">
+                <figcaption><%= image.title || 'Car image' %></figcaption>
+              </figure>
+            <% }) %>
+          </div>
+        </section>
+      <% } else { %>
+        <p class="api-meta">Image gallery could not load right now.</p>
+      <% } %>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>
