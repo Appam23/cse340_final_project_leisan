@@ -5,6 +5,7 @@ import { dirname, join } from 'path';
 import { setupMiddleware } from './src/middleware/index.js';
 import router from './routes/index.js';
 import { handle404, handle500 } from './src/controllers/errorController.js';
+import { findUserById } from './src/models/userModel.js';
 
 dotenv.config();
 
@@ -16,6 +17,20 @@ const PORT = process.env.PORT || 4000;
 
 // Set up all middleware
 setupMiddleware(app);
+
+app.use(async (req, res, next) => {
+  try {
+    res.locals.currentUser = null;
+
+    if (req.session?.user?.id) {
+      res.locals.currentUser = await findUserById(req.session.user.id);
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.set('view engine', 'ejs');
 app.set('views', join(__dirname, 'src/views'));

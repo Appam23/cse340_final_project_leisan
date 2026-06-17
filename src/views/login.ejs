@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main class="page">
+      <section class="form-card" aria-labelledby="login-heading">
+        <p class="eyebrow">Account Access</p>
+        <h1 id="login-heading">Login</h1>
+        <p class="lead">Sign in to manage your account, saved vehicles, and dealership activity.</p>
+
+        <% if (message) { %>
+          <p class="auth-message auth-message-success"><%= message %></p>
+        <% } %>
+
+        <% if (error) { %>
+          <p class="auth-message auth-message-error"><%= error %></p>
+        <% } %>
+
+        <form class="auth-form" action="/login" method="post">
+          <label class="field">
+            <span>Email</span>
+            <input type="email" name="email" autocomplete="email" required>
+          </label>
+
+          <label class="field">
+            <span>Password</span>
+            <input type="password" name="password" autocomplete="current-password" required>
+          </label>
+
+          <button type="submit" class="auth-button">Log In</button>
+        </form>
+
+        <p class="auth-switch">Need an account? <a href="/register">Create one</a>.</p>
+      </section>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>

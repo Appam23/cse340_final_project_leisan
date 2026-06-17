@@ -5,3 +5,7 @@ export const getAbout = (req, res) => {
 export const getContact = (req, res) => {
   res.render('contact', { title: 'Contact' });
 };
+
+export const getLogin = (req, res) => {
+  res.render('login', { title: 'Login' });
+};

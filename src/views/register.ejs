@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main class="page">
+      <section class="form-card" aria-labelledby="register-heading">
+        <p class="eyebrow">Create Account</p>
+        <h1 id="register-heading">Register</h1>
+        <p class="lead">Create your account to sign in and use the dealership site features.</p>
+
+        <% if (message) { %>
+          <p class="auth-message auth-message-success"><%= message %></p>
+        <% } %>
+
+        <% if (error) { %>
+          <p class="auth-message auth-message-error"><%= error %></p>
+        <% } %>
+
+        <form class="auth-form" action="/register" method="post">
+          <label class="field">
+            <span>First Name</span>
+            <input type="text" name="firstName" autocomplete="given-name" required>
+          </label>
+
+          <label class="field">
+            <span>Middle Name</span>
+            <input type="text" name="middleName" autocomplete="additional-name">
+          </label>
+
+          <label class="field">
+            <span>Last Name</span>
+            <input type="text" name="lastName" autocomplete="family-name" required>
+          </label>
+
+          <label class="field">
+            <span>Email</span>
+            <input type="email" name="email" autocomplete="email" required>
+          </label>
+
+          <label class="field">
+            <span>Password</span>
+            <input type="password" name="password" autocomplete="new-password" required>
+          </label>
+
+          <label class="field">
+            <span>Confirm Password</span>
+            <input type="password" name="confirmPassword" autocomplete="new-password" required>
+          </label>
+
+          <button type="submit" class="auth-button">Create Account</button>
+        </form>
+
+        <p class="auth-switch">Already have an account? <a href="/login">Log in</a>.</p>
+      </section>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>
