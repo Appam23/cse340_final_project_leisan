@@ -1,5 +1,5 @@
+import 'dotenv/config';
 import express from 'express';
-import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { setupMiddleware } from './src/middleware/index.js';
@@ -7,8 +7,6 @@ import router from './routes/index.js';
 import { handle404, handle500 } from './src/controllers/errorController.js';
 import { findUserById } from './src/models/userModel.js';
 import { ensureUsersTable } from './src/config/database.js';
-
-dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

@@ -1,8 +1,38 @@
 import { Pool } from 'pg';
 
-const poolConfig = {
-  ssl: { rejectUnauthorized: false },
+const isProduction = process.env.NODE_ENV === 'production';
+
+const isLocalHost = (host) => !host || host === 'localhost' || host === '127.0.0.1' || host === '::1';
+
+const getDatabaseHost = () => {
+  if (process.env.DATABASE_URL) {
+    try {
+      return new URL(process.env.DATABASE_URL).hostname;
+    } catch {
+      return null;
+    }
+  }
+
+  return process.env.PGHOST;
 };
+
+const useSsl = !isLocalHost(getDatabaseHost());
+
+const sslConfig = useSsl ? { rejectUnauthorized: false } : false;
+
+const poolConfig = process.env.DATABASE_URL
+  ? {
+      connectionString: process.env.DATABASE_URL,
+      ssl: sslConfig,
+    }
+  : {
+      host: process.env.PGHOST,
+      port: Number(process.env.PGPORT || 6432),
+      database: process.env.PGDATABASE,
+      user: process.env.PGUSER,
+      password: process.env.PGPASSWORD,
+      ssl: sslConfig,
+    };
 
 export const pool = new Pool(poolConfig);
 
@@ -18,8 +48,4 @@ export const ensureUsersTable = async () => {
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     )
   `);
-
-  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS first_name VARCHAR(100)`);
-  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS middle_name VARCHAR(100)`);
-  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS last_name VARCHAR(100)`);
 };
