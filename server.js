@@ -6,6 +6,7 @@ import { setupMiddleware } from './src/middleware/index.js';
 import router from './routes/index.js';
 import { handle404, handle500 } from './src/controllers/errorController.js';
 import { findUserById } from './src/models/userModel.js';
+import { ensureUsersTable } from './src/config/database.js';
 
 dotenv.config();
 
@@ -42,6 +43,17 @@ app.use('/', router);
 app.use(handle404);       // 404 handler
 app.use(handle500);       // 500 handler
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await ensureUsersTable();
+
+    app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to initialize database:', error);
+    process.exit(1);
+  }
+};
+
+startServer();
