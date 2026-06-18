@@ -1,7 +1,5 @@
 import { Pool } from 'pg';
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 const isLocalHost = (host) => !host || host === 'localhost' || host === '127.0.0.1' || host === '::1';
 
 const getDatabaseHost = () => {
@@ -17,7 +15,6 @@ const getDatabaseHost = () => {
 };
 
 const useSsl = !isLocalHost(getDatabaseHost());
-
 const sslConfig = useSsl ? { rejectUnauthorized: false } : false;
 
 const poolConfig = process.env.DATABASE_URL
