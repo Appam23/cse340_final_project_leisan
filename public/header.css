@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(15, 23, 32, 0.82);
   backdrop-filter: blur(10px);
   border-color: var(--border);
   position: sticky;
@@ -36,7 +36,7 @@
   height: 42px;
   object-fit: cover;
   border-radius: 50%;
-  box-shadow: 0 8px 20px rgba(31, 39, 48, 0.12);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.24);
 }
 
 .site-nav {
@@ -71,7 +71,7 @@
 
 .site-auth-button:hover {
   color: var(--accent);
-  border-color: rgba(201, 106, 43, 0.35);
+  border-color: rgba(201, 106, 43, 0.5);
 }
 
 .site-nav a {

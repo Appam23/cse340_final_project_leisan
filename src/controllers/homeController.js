@@ -72,7 +72,7 @@ export const getHome = async (req, res) => {
       : await toDataUri(featuredImage.src);
 
     const galleryImages = await Promise.all(
-      pickRandomItems(carImages, 6).map(async (image) => ({
+      pickRandomItems(carImages, 8).map(async (image) => ({
         src: image.src.startsWith('/')
           ? image.src
           : await toDataUri(image.src),

@@ -58,13 +58,13 @@
   padding: 14px 16px;
   font: inherit;
   color: var(--text);
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(7, 12, 18, 0.9);
   outline: none;
   transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
 .field input::placeholder {
-  color: #8d97a0;
+  color: #6f7a86;
 }
 
 .field input:focus {
@@ -84,7 +84,7 @@
   letter-spacing: 0.02em;
   color: #fff;
   background: linear-gradient(135deg, var(--accent), #e38a42);
-  box-shadow: 0 16px 30px rgba(201, 106, 43, 0.24);
+  box-shadow: 0 16px 30px rgba(201, 106, 43, 0.28);
   cursor: pointer;
   transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
 }
