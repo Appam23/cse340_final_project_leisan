@@ -10,17 +10,47 @@ const pickRandomItems = (items, count) => {
 
 const pickRandomItem = (items) => items[Math.floor(Math.random() * items.length)];
 
-const toDataUri = async (imageUrl) => {
-  const response = await fetch(imageUrl);
+const slugify = (value) => value
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-+|-+$/g, '')
+  .slice(0, 40) || 'car';
 
-  if (!response.ok) {
-    throw new Error(`Image fetch failed with status ${response.status}`);
+const createHash = (value) => {
+  let hash = 0;
+
+  for (const character of value) {
+    hash = (hash * 31 + character.charCodeAt(0)) % 100000;
   }
 
-  const contentType = response.headers.get('content-type') || 'image/jpeg';
-  const buffer = Buffer.from(await response.arrayBuffer());
+  return hash;
+};
 
-  return `data:${contentType};base64,${buffer.toString('base64')}`;
+const formatPrice = (seed) => {
+  const hash = createHash(seed);
+  const price = 18000 + (hash % 62000);
+
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  }).format(price);
+};
+
+const buildCarCard = (image, index, prefix = 'car') => {
+  const title = image.title || 'Car image';
+  const source = image.src;
+  const idSeed = `${title}-${image.attribution || 'openverse'}-${index}`;
+  const id = `${prefix}-${slugify(title)}-${createHash(idSeed)}`;
+
+  return {
+    id,
+    title,
+    src: source,
+    attribution: image.attribution || 'Openverse',
+    price: formatPrice(idSeed),
+    detailHref: `/cars/${id}`,
+  };
 };
 
 export const getHome = async (req, res) => {
@@ -67,26 +97,15 @@ export const getHome = async (req, res) => {
           attribution: 'Local fallback image',
         };
 
-    const featuredImageSrc = featuredImage.src.startsWith('/')
-      ? featuredImage.src
-      : await toDataUri(featuredImage.src);
+    const featuredCar = buildCarCard(featuredImage, 0, 'featured');
+    const galleryCars = pickRandomItems(carImages, 8).map((image, index) => buildCarCard(image, index + 1));
 
-    const galleryImages = await Promise.all(
-      pickRandomItems(carImages, 8).map(async (image) => ({
-        src: image.src.startsWith('/')
-          ? image.src
-          : await toDataUri(image.src),
-        title: image.title,
-        attribution: image.attribution,
-      }))
-    );
+    req.session.carShowcase = [featuredCar, ...galleryCars];
 
     res.render('home', {
       title: 'Car Franchise',
-      carImage: featuredImageSrc,
-      carImageTitle: featuredImage.title,
-      carImageAttribution: featuredImage.attribution,
-      carImages: galleryImages,
+      featuredCar,
+      carImages: galleryCars,
       featuredMake,
       carMakes: pickRandomItems(carMakes, 6),
       apiCount: makeData.Count ?? carMakes.length,
@@ -97,9 +116,11 @@ export const getHome = async (req, res) => {
 
     res.render('home', {
       title: 'Car Franchise',
-      carImage: '/images/car.png',
-      carImageTitle: 'Car photo',
-      carImageAttribution: 'Local fallback image',
+      featuredCar: buildCarCard({
+        src: '/images/car.png',
+        title: 'Car photo',
+        attribution: 'Local fallback image',
+      }, 0, 'featured'),
       carImages: [],
       featuredMake: 'Car API unavailable',
       carMakes: [],

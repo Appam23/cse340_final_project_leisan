@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main class="page detail-page">
+      <section class="detail-shell">
+        <div class="detail-card">
+          <p class="eyebrow">Vehicle Review</p>
+          <h1><%= car.title %></h1>
+          <p class="lead">Review the price, inspect the image, and send your contact information if you want us to follow up.</p>
+
+          <% if (inquirySuccess) { %>
+            <div class="detail-notice detail-notice-success"><%= inquirySuccess %></div>
+          <% } %>
+
+          <% if (inquiryError) { %>
+            <div class="detail-notice detail-notice-error"><%= inquiryError %></div>
+          <% } %>
+
+          <div class="detail-grid">
+            <figure class="detail-figure">
+              <img class="detail-image" src="<%= car.src %>" alt="<%= car.title || 'Car image' %>">
+              <figcaption><%= car.attribution %></figcaption>
+            </figure>
+
+            <div class="detail-info">
+              <p class="detail-label">Price</p>
+              <p class="detail-price"><%= car.price %></p>
+              <p class="detail-copy">This is a live listing preview built from the car gallery shown on the home page.</p>
+
+              <form class="auth-form detail-form" action="/cars/<%= car.id %>" method="post">
+                <div class="field">
+                  <span>Name</span>
+                  <input type="text" name="name" value="<%= formData.name || '' %>" placeholder="Your full name" required>
+                </div>
+
+                <div class="field">
+                  <span>Email</span>
+                  <input type="email" name="email" value="<%= formData.email || '' %>" placeholder="you@example.com" required>
+                </div>
+
+                <div class="field">
+                  <span>Phone</span>
+                  <input type="tel" name="phone" value="<%= formData.phone || '' %>" placeholder="(555) 123-4567" required>
+                </div>
+
+                <div class="field">
+                  <span>Message</span>
+                  <textarea name="message" rows="4" placeholder="Tell us how we can help"><%= formData.message || '' %></textarea>
+                </div>
+
+                <button class="auth-button" type="submit">Submit Contact Information</button>
+                <a class="detail-back-link" href="/">Back to Gallery</a>
+              </form>
+
+              <p class="detail-fineprint">We will only use this information to follow up about this vehicle.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>

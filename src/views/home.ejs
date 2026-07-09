@@ -7,17 +7,25 @@
     <%- include('partials/header') %>
     <main class="page">
       <p class="eyebrow">CSE340 Final Project</p>
-      <img class="car-photo" src="<%= carImage %>" alt="<%= carImageTitle || 'Car photo' %>">
+      <a class="featured-car-link" href="<%= featuredCar.detailHref %>">
+        <img class="car-photo" src="<%= featuredCar.src %>" alt="<%= featuredCar.title || 'Car photo' %>">
+      </a>
       <h1>Car Dealership</h1>
       <p class="lead">Welcome to our car dealership website. Built with Node.js, Express, EJS, and PostgreSQL.</p>
       <section class="api-card" aria-labelledby="api-heading">
         <p class="api-kicker">Live Car API</p>
-        <h2 id="api-heading"><%= featuredMake %></h2>
+        <h2 id="api-heading"><%= featuredCar.title %></h2>
+        <p class="api-price"><%= featuredCar.price %></p>
         <p class="api-copy"><%= apiMessage %></p>
         <% if (carMakes && carMakes.length) { %>
           <div class="make-grid" aria-label="Random car makes">
             <% carMakes.forEach((make) => { %>
-              <span class="make-pill"><%= make %></span>
+              <a
+                class="make-pill make-link"
+                href="https://www.google.com/search?q=<%= encodeURIComponent(make + ' car') %>"
+                target="_blank"
+                rel="noopener noreferrer"
+              ><%= make %></a>
             <% }) %>
           </div>
           <p class="api-meta">Showing <%= carMakes.length %> random makes from <%= apiCount %> total.</p>
@@ -32,10 +40,15 @@
           <h2 id="gallery-heading">More Cars From the API</h2>
           <div class="gallery-grid">
             <% carImages.forEach((image) => { %>
-              <figure class="gallery-item">
-                <img src="<%= image.src %>" alt="<%= image.title || 'Car image' %>">
-                <figcaption><%= image.title || 'Car image' %></figcaption>
-              </figure>
+              <a class="gallery-link" href="<%= image.detailHref %>">
+                <figure class="gallery-item">
+                  <img src="<%= image.src %>" alt="<%= image.title || 'Car image' %>">
+                  <figcaption>
+                    <span class="gallery-title"><%= image.title || 'Car image' %></span>
+                    <span class="gallery-price"><%= image.price %></span>
+                  </figcaption>
+                </figure>
+              </a>
             <% }) %>
           </div>
         </section>

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getHome } from '../src/controllers/homeController.js';
-import { getAbout, getContact } from '../src/controllers/pageController.js';
+import { getAbout, getCarReview, getContact, postCarInquiry } from '../src/controllers/pageController.js';
 import {
   getLogin,
   getRegister,
@@ -14,6 +14,8 @@ const router = Router();
 router.get('/', getHome);
 router.get('/about', getAbout);
 router.get('/contact', getContact);
+router.get('/cars/:carId', getCarReview);
+router.post('/cars/:carId', postCarInquiry);
 router.get('/login', getLogin);
 router.post('/login', postLogin);
 router.get('/register', getRegister);

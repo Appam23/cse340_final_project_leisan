@@ -54,6 +54,18 @@
   letter-spacing: 0.03em;
 }
 
+.make-link {
+  text-decoration: none;
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.make-link:hover,
+.make-link:focus-visible {
+  transform: translateY(-1px);
+  background: rgba(201, 106, 43, 0.24);
+  border-color: rgba(201, 106, 43, 0.4);
+}
+
 .api-meta {
   margin: 16px 0 0;
   color: var(--muted);
@@ -94,6 +106,10 @@
   box-shadow:
     0 18px 40px rgba(0, 0, 0, 0.42),
     0 1px 0 rgba(255, 255, 255, 0.03) inset;
+}
+
+.gallery-item:hover {
+  border-color: rgba(201, 106, 43, 0.28);
 }
 
 .gallery-item img {

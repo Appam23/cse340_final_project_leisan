@@ -14,7 +14,16 @@ const PgSession = connectPgSimple(session);
 // Function that sets up all middleware on the app
 export const setupMiddleware = (app) => {
   // Security: Add HTTP headers
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          imgSrc: ["'self'", 'data:', 'https://api.openverse.org', 'https://live.staticflickr.com'],
+        },
+      },
+    })
+  );
 
   // Access control: Allow cross-origin requests
   app.use(cors());
