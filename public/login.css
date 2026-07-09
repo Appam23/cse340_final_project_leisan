@@ -28,13 +28,13 @@
 }
 
 .auth-message-success {
-  color: #1d5d3e;
+  color: #70f440;
   background: rgba(34, 197, 94, 0.12);
   border: 1px solid rgba(34, 197, 94, 0.2);
 }
 
 .auth-message-error {
-  color: #8b2f2f;
+  color: #ec3a3a;
   background: rgba(239, 68, 68, 0.12);
   border: 1px solid rgba(239, 68, 68, 0.2);
 }

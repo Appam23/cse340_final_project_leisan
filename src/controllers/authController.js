@@ -17,7 +17,7 @@ const signInUser = (req, user) => {
 export const getLogin = (req, res) => {
   res.render('login', {
     title: 'Login',
-    message: req.query.message || '',
+    message: '',
     error: '',
   });
 };
@@ -76,6 +76,7 @@ export const postRegister = async (req, res, next) => {
 
     signInUser(req, user);
 
+    req.flash('success', `Welcome, ${user.first_name}.`);
     req.session.save(() => {
       res.redirect('/');
     });
@@ -119,6 +120,7 @@ export const postLogin = async (req, res, next) => {
 
     signInUser(req, user);
 
+    req.flash('success', `Welcome back, ${user.first_name}!`);
     req.session.save(() => {
       res.redirect('/');
     });
@@ -128,12 +130,23 @@ export const postLogin = async (req, res, next) => {
 };
 
 export const postLogout = (req, res, next) => {
-  req.session.destroy((error) => {
-    if (error) {
-      return next(error);
-    }
+  try {
+    // Preserve flash by setting it before ending the session storage for the user.
+    req.flash('success', 'You have been logged out.');
 
-    res.clearCookie('connect.sid');
-    res.redirect('/login?message=You%20have%20been%20logged%20out.');
-  });
+    if (req.session) {
+      // Remove user data but keep the session so flash can be stored and read on next request
+      delete req.session.user;
+      req.session.save((err) => {
+        if (err) return next(err);
+        res.clearCookie('connect.sid');
+        res.redirect('/login');
+      });
+    } else {
+      res.clearCookie('connect.sid');
+      res.redirect('/login');
+    }
+  } catch (error) {
+    next(error);
+  }
 };

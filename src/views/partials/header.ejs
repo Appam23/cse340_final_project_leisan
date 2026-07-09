@@ -21,3 +21,18 @@
     <% } %>
   </nav>
 </header>
+<% if (messages && messages.success && messages.success.length) { %>
+  <% messages.success.forEach(m => { %>
+    <div class="site-flash">
+      <p class="auth-message auth-message-success"><%= m %></p>
+    </div>
+  <% }) %>
+<% } %>
+
+<% if (messages && messages.error && messages.error.length) { %>
+  <% messages.error.forEach(m => { %>
+    <div class="site-flash">
+      <p class="auth-message auth-message-error"><%= m %></p>
+    </div>
+  <% }) %>
+<% } %>

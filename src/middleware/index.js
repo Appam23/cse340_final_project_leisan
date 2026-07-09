@@ -5,6 +5,7 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import session from 'express-session';
 import connectPgSimple from 'connect-pg-simple';
+import flash from 'connect-flash';
 import { pool } from '../config/database.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -42,6 +43,12 @@ export const setupMiddleware = (app) => {
       },
     })
   );
+
+  app.use(flash());
+  app.use((req, res, next) => {
+    res.locals.messages = req.flash();
+    next();
+  });
 
   app.use((req, res, next) => {
     res.locals.currentUser = req.session.user || null;
