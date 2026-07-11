@@ -100,7 +100,7 @@ If `DATABASE_URL` is set, it is used first. Otherwise the app falls back to the 
 ## Deployment
 The app is deployed on Render as a Node.js web service backed by PostgreSQL, not as a static site.
 
-Live demo: https://cse340-final-project-26.onrender.com/
+Live demo: https://cse340-final-project-26.onrender.com
 
 ## Author
 
