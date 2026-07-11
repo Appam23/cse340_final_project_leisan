@@ -1,43 +1,55 @@
-<section class="auth-card admin-panel">
-  <p class="eyebrow">Administration</p>
-  <h1>Manage Users</h1>
-  <p class="lead admin-panel-copy">Update account details, change roles, or remove users from the system.</p>
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main class="page">
+      <section class="auth-card admin-panel">
+        <p class="eyebrow">Administration</p>
+        <h1>Manage Users</h1>
+        <p class="lead admin-panel-copy">Update account details, change roles, or remove users from the system.</p>
 
-  <% if (users.length === 0) { %>
-    <p>No users found.</p>
-  <% } else { %>
-    <div class="admin-table-wrap">
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>User</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Created</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% users.forEach((user) => { %>
-            <tr>
-              <td data-label="User"><%= [user.first_name, user.last_name].filter(Boolean).join(' ') || user.email %></td>
-              <td data-label="Email"><%= user.email %></td>
-              <td data-label="Role">
-                <span class="role-pill role-<%= user.role %>"><%= user.role %></span>
-              </td>
-              <td data-label="Created"><%= new Date(user.created_at).toLocaleDateString() %></td>
-              <td data-label="Actions">
-                <div class="user-admin-actions">
-                  <a class="site-auth-button" href="/admin/users/<%= user.id %>/edit">Edit</a>
-                  <form action="/admin/users/<%= user.id %>/delete" method="post">
-                    <button type="submit" class="site-auth-button">Delete</button>
-                  </form>
-                </div>
-              </td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
-    </div>
-  <% } %>
-</section>
+        <% if (users.length === 0) { %>
+          <p>No users found.</p>
+        <% } else { %>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% users.forEach((user) => { %>
+                  <tr>
+                    <td data-label="User"><%= [user.first_name, user.last_name].filter(Boolean).join(' ') || user.email %></td>
+                    <td data-label="Email"><%= user.email %></td>
+                    <td data-label="Role">
+                      <span class="role-pill role-<%= user.role %>"><%= user.role %></span>
+                    </td>
+                    <td data-label="Created"><%= new Date(user.created_at).toLocaleDateString() %></td>
+                    <td data-label="Actions">
+                      <div class="user-admin-actions">
+                        <a class="site-auth-button" href="/admin/users/<%= user.id %>/edit">Edit</a>
+                        <form action="/admin/users/<%= user.id %>/delete" method="post">
+                          <button type="submit" class="site-auth-button">Delete</button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </section>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>
