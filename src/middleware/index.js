@@ -13,6 +13,12 @@ const PgSession = connectPgSimple(session);
 
 // Function that sets up all middleware on the app
 export const setupMiddleware = (app) => {
+  const sessionSecret = process.env.SESSION_SECRET;
+
+  if (!sessionSecret) {
+    throw new Error('SESSION_SECRET environment variable is required.');
+  }
+
   // Security: Add HTTP headers
   app.use(
     helmet({
@@ -41,7 +47,7 @@ export const setupMiddleware = (app) => {
         pool,
         createTableIfMissing: true,
       }),
-      secret: process.env.SESSION_SECRET || 'car-franchise-session-secret',
+      secret: sessionSecret,
       resave: false,
       saveUninitialized: false,
       cookie: {
