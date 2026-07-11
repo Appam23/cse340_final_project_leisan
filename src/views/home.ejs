@@ -12,6 +12,18 @@
       </a>
       <h1>Car Dealership</h1>
       <p class="lead">Welcome to our car dealership website. Built with Node.js, Express, EJS, and PostgreSQL.</p>
+
+      <% if (currentUser && currentUser.role === 'admin') { %>
+        <section class="form-card admin-tools" aria-labelledby="admin-tools-heading">
+          <p class="api-kicker">Admin Tools</p>
+          <h2 id="admin-tools-heading">Manage Users</h2>
+          <p class="lead admin-tools-copy">Open the admin panel to update user info, change roles, or delete accounts.</p>
+          <div class="admin-actions">
+            <a class="auth-button" href="/admin/users">Open Admin Panel</a>
+          </div>
+        </section>
+      <% } %>
+
       <section class="api-card" aria-labelledby="api-heading">
         <p class="api-kicker">Live Car API</p>
         <h2 id="api-heading"><%= featuredCar.title %></h2>

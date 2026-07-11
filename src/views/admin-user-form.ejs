@@ -1,0 +1,43 @@
+<section class="auth-card">
+  <h1>Edit User</h1>
+  <p>Update this account's details and role.</p>
+
+  <% if (error) { %>
+    <p class="auth-message auth-message-error"><%= error %></p>
+  <% } %>
+
+  <form action="/admin/users/<%= user.id %>/edit" method="post" class="auth-form">
+    <label>
+      First Name
+      <input type="text" name="firstName" value="<%= user.first_name || '' %>" required>
+    </label>
+
+    <label>
+      Middle Name
+      <input type="text" name="middleName" value="<%= user.middle_name || '' %>">
+    </label>
+
+    <label>
+      Last Name
+      <input type="text" name="lastName" value="<%= user.last_name || '' %>" required>
+    </label>
+
+    <label>
+      Email
+      <input type="email" name="email" value="<%= user.email || '' %>" required>
+    </label>
+
+    <label>
+      Role
+      <select name="role">
+        <option value="user" <%= user.role === 'user' ? 'selected' : '' %>>User</option>
+        <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
+      </select>
+    </label>
+
+    <div class="auth-actions">
+      <button type="submit" class="site-auth-button">Save Changes</button>
+      <a class="site-auth-button" href="/admin/users">Cancel</a>
+    </div>
+  </form>
+</section>

@@ -83,6 +83,7 @@ The app reads the following environment variables:
 - `PGUSER` - database user
 - `PGPASSWORD` - database password
 - `SESSION_SECRET` - session signing secret
+- `ADMIN_EMAIL` - email address that should be promoted to admin on registration/login
 
 If `DATABASE_URL` is set, it is used first. Otherwise the app falls back to the individual `PG*` values.
 

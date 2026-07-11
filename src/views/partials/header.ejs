@@ -12,6 +12,9 @@
         Signed in as
         <%= [currentUser.first_name, currentUser.last_name].filter(Boolean).join(' ') || currentUser.email %>
       </span>
+      <% if (currentUser.role === 'admin') { %>
+        <a href="/admin/users">Admin</a>
+      <% } %>
       <form class="site-auth-form" action="/logout" method="post">
         <button type="submit" class="site-auth-button">Logout</button>
       </form>

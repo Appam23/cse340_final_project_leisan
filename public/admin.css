@@ -1,0 +1,95 @@
+.admin-tools {
+  margin: 28px auto 0;
+  width: min(100%, 720px);
+}
+
+.admin-tools h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.1;
+}
+
+.admin-tools-copy {
+  margin-top: 14px;
+}
+
+.admin-actions {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.admin-actions .auth-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.admin-panel {
+  width: min(100%, 980px);
+}
+
+.admin-panel-copy {
+  margin-bottom: 0;
+}
+
+.admin-table-wrap {
+  margin-top: 28px;
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 16px 14px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.admin-table th {
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.admin-table td {
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.role-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  text-transform: capitalize;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.role-admin {
+  color: #f6c37b;
+  background: rgba(201, 106, 43, 0.16);
+}
+
+.role-user {
+  color: #9dd7ff;
+  background: rgba(77, 144, 255, 0.14);
+}
+
+@media (max-width: 520px) {
+  .admin-table-wrap {
+    margin-top: 20px;
+  }
+}

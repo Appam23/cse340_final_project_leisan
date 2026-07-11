@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { createUser, findUserByEmail } from '../models/userModel.js';
+import { createUser, findUserByEmail, updateUserRoleById } from '../models/userModel.js';
 
 const normalizeEmail = (email) => email.trim().toLowerCase();
 const normalizeName = (value) => value.trim();
@@ -11,6 +11,7 @@ const signInUser = (req, user) => {
     firstName: user.first_name,
     middleName: user.middle_name,
     lastName: user.last_name,
+    role: user.role,
   };
 };
 
@@ -66,12 +67,14 @@ export const postRegister = async (req, res, next) => {
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
+    const role = process.env.ADMIN_EMAIL && email === process.env.ADMIN_EMAIL ? 'admin' : 'user';
     const user = await createUser({
       firstName,
       middleName: middleName || null,
       lastName,
       email,
       passwordHash,
+      role,
     });
 
     signInUser(req, user);
@@ -116,6 +119,14 @@ export const postLogin = async (req, res, next) => {
         message: '',
         error: 'Invalid email or password.',
       });
+    }
+
+    if (process.env.ADMIN_EMAIL && user.email === process.env.ADMIN_EMAIL && user.role !== 'admin') {
+      const promotedUser = await updateUserRoleById(user.id, 'admin');
+
+      if (promotedUser) {
+        user.role = promotedUser.role;
+      }
     }
 
     signInUser(req, user);

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { getHome } from '../src/controllers/homeController.js';
 import { getAbout, getCarReview, getContact, postCarInquiry } from '../src/controllers/pageController.js';
+import { getAdminUsers, getEditUser, postDeleteUser, postEditUser } from '../src/controllers/adminController.js';
 import {
   getLogin,
   getRegister,
@@ -8,6 +9,7 @@ import {
   postLogout,
   postRegister,
 } from '../src/controllers/authController.js';
+import { requireAdmin } from '../src/middleware/index.js';
 
 const router = Router();
 
@@ -21,6 +23,10 @@ router.post('/login', postLogin);
 router.get('/register', getRegister);
 router.post('/register', postRegister);
 router.post('/logout', postLogout);
+router.get('/admin/users', requireAdmin, getAdminUsers);
+router.get('/admin/users/:userId/edit', requireAdmin, getEditUser);
+router.post('/admin/users/:userId/edit', requireAdmin, postEditUser);
+router.post('/admin/users/:userId/delete', requireAdmin, postDeleteUser);
 router.get('/test-500', (req, res, next) => {
   next(new Error('Test error'));
 });

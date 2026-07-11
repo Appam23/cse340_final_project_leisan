@@ -67,3 +67,26 @@ export const setupMiddleware = (app) => {
   // Static files: Serve CSS, images, etc. from /public folder
   app.use(express.static(join(__dirname, '../../public')));
 };
+
+export const requireAuth = (req, res, next) => {
+  if (!res.locals.currentUser) {
+    req.flash('error', 'Please log in to continue.');
+    return res.redirect('/login');
+  }
+
+  return next();
+};
+
+export const requireAdmin = (req, res, next) => {
+  if (!res.locals.currentUser) {
+    req.flash('error', 'Please log in to continue.');
+    return res.redirect('/login');
+  }
+
+  if (res.locals.currentUser.role !== 'admin') {
+    req.flash('error', 'You do not have permission to access that page.');
+    return res.redirect('/');
+  }
+
+  return next();
+};
