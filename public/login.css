@@ -55,7 +55,7 @@
   color: var(--text);
 }
 
-.field input {
+.field-input {
   width: 100%;
   border: 1px solid var(--border);
   border-radius: 16px;
@@ -64,17 +64,30 @@
   color: var(--text);
   background: rgba(7, 12, 18, 0.9);
   outline: none;
-  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease, background-color 160ms ease;
 }
 
-.field input::placeholder {
+.field-input::placeholder {
   color: #6f7a86;
 }
 
-.field input:focus {
+.field-input:focus {
   border-color: rgba(201, 106, 43, 0.7);
   box-shadow: 0 0 0 4px rgba(201, 106, 43, 0.14);
   transform: translateY(-1px);
+}
+
+.field-input.is-invalid {
+  border-color: rgba(239, 68, 68, 0.75);
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
+}
+
+.field-error {
+  display: block;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.86rem;
+  line-height: 1.4;
+  color: #ff8f8f;
 }
 
 .auth-button {

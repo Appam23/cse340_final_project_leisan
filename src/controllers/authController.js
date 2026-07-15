@@ -1,6 +1,9 @@
 import bcrypt from 'bcryptjs';
 import { createUser, findUserByEmail, updateUserRoleById } from '../models/userModel.js';
 
+const MIN_PASSWORD_LENGTH = 8;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const normalizeEmail = (email) => email.trim().toLowerCase();
 const normalizeName = (value) => value.trim();
 
@@ -15,22 +18,33 @@ const signInUser = (req, user) => {
   };
 };
 
-export const getLogin = (req, res) => {
-  res.render('login', {
-    title: 'Login',
-    message: '',
-    error: '',
-    formData: {},
+const redirectAfterAuth = (req, res) => {
+  const returnTo = req.session.returnTo;
+  delete req.session.returnTo;
+  returnTo ? res.redirect(returnTo) : res.redirect('/');
+};
+
+const renderAuthPage = (res, view, { title, message = '', error = '', formData = {}, fieldErrors = {} }) => {
+  res.render(view, {
+    title,
+    message,
+    error,
+    formData,
+    fieldErrors,
   });
 };
 
+const renderAuthError = (res, view, statusCode, payload) => {
+  res.status(statusCode);
+  renderAuthPage(res, view, payload);
+};
+
+export const getLogin = (req, res) => {
+  renderAuthPage(res, 'login', { title: 'Login' });
+};
+
 export const getRegister = (req, res) => {
-  res.render('register', {
-    title: 'Register',
-    message: '',
-    error: '',
-    formData: {},
-  });
+  renderAuthPage(res, 'register', { title: 'Register' });
 };
 
 export const postRegister = async (req, res, next) => {
@@ -41,31 +55,62 @@ export const postRegister = async (req, res, next) => {
     const email = normalizeEmail(req.body.email || '');
     const password = req.body.password || '';
     const confirmPassword = req.body.confirmPassword || '';
+    const fieldErrors = {};
 
-    if (!firstName || !lastName || !email || !password || !confirmPassword) {
-      return res.status(400).render('register', {
+    if (!firstName) fieldErrors.firstName = 'First name is required.';
+    if (!lastName) fieldErrors.lastName = 'Last name is required.';
+    if (!email) {
+      fieldErrors.email = 'Email is required.';
+    } else if (!EMAIL_PATTERN.test(email)) {
+      fieldErrors.email = 'Enter a valid email address.';
+    }
+    if (!password) fieldErrors.password = 'Password is required.';
+    if (!confirmPassword) fieldErrors.confirmPassword = 'Please confirm your password.';
+
+    if (Object.keys(fieldErrors).length > 0) {
+      return renderAuthError(res, 'register', 400, {
         title: 'Register',
-        message: '',
-        error: 'All fields are required.',
+        error: 'Please fix the highlighted fields.',
         formData: {
           firstName,
           middleName,
           lastName,
           email,
         },
+        fieldErrors,
       });
     }
 
     if (password !== confirmPassword) {
-      return res.status(400).render('register', {
+      fieldErrors.password = 'Passwords do not match.';
+      fieldErrors.confirmPassword = 'Passwords do not match.';
+
+      return renderAuthError(res, 'register', 400, {
         title: 'Register',
-        message: '',
-        error: 'Passwords do not match.',
+        error: 'Please fix the highlighted fields.',
         formData: {
           firstName,
           middleName,
           lastName,
           email,
+        },
+        fieldErrors,
+      });
+    }
+
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      return renderAuthPage(res, 'register', {
+        title: 'Register',
+        error: `Password must be at least ${MIN_PASSWORD_LENGTH} characters long.`,
+        formData: {
+          firstName,
+          middleName,
+          lastName,
+          email,
+        },
+        fieldErrors: {
+          password: `Use at least ${MIN_PASSWORD_LENGTH} characters.`,
+          confirmPassword: `Use at least ${MIN_PASSWORD_LENGTH} characters.`,
         },
       });
     }
@@ -73,15 +118,17 @@ export const postRegister = async (req, res, next) => {
     const existingUser = await findUserByEmail(email);
 
     if (existingUser) {
-      return res.status(409).render('register', {
+      return renderAuthError(res, 'register', 409, {
         title: 'Register',
-        message: '',
         error: 'An account with that email already exists.',
         formData: {
           firstName,
           middleName,
           lastName,
           email,
+        },
+        fieldErrors: {
+          email: 'That email is already registered.',
         },
       });
     }
@@ -101,7 +148,7 @@ export const postRegister = async (req, res, next) => {
 
     req.flash('success', `Welcome, ${user.first_name}.`);
     req.session.save(() => {
-      res.redirect('/');
+      redirectAfterAuth(req, res);
     });
   } catch (error) {
     next(error);
@@ -112,35 +159,44 @@ export const postLogin = async (req, res, next) => {
   try {
     const email = normalizeEmail(req.body.email || '');
     const password = req.body.password || '';
+    const fieldErrors = {};
 
-    if (!email || !password) {
-      return res.status(400).render('login', {
+    if (!email) fieldErrors.email = 'Email is required.';
+    if (!password) fieldErrors.password = 'Password is required.';
+
+    if (Object.keys(fieldErrors).length > 0) {
+      return renderAuthError(res, 'login', 400, {
         title: 'Login',
-        message: '',
-        error: 'Email and password are required.',
+        error: 'Please fix the highlighted fields.',
         formData: { email },
+        fieldErrors,
       });
     }
 
     const user = await findUserByEmail(email);
 
     if (!user) {
-      return res.status(401).render('login', {
+      return renderAuthError(res, 'login', 401, {
         title: 'Login',
-        message: '',
         error: 'Invalid email or password.',
         formData: { email },
+        fieldErrors: {
+          email: 'No account found for that email.',
+          password: 'Check your password and try again.',
+        },
       });
     }
 
     const passwordMatches = await bcrypt.compare(password, user.password_hash);
 
     if (!passwordMatches) {
-      return res.status(401).render('login', {
+      return renderAuthError(res, 'login', 401, {
         title: 'Login',
-        message: '',
         error: 'Invalid email or password.',
         formData: { email },
+        fieldErrors: {
+          password: 'Check your password and try again.',
+        },
       });
     }
 
@@ -156,7 +212,7 @@ export const postLogin = async (req, res, next) => {
 
     req.flash('success', `Welcome back, ${user.first_name}!`);
     req.session.save(() => {
-      res.redirect('/');
+      redirectAfterAuth(req, res);
     });
   } catch (error) {
     next(error);
@@ -171,6 +227,7 @@ export const postLogout = (req, res, next) => {
     if (req.session) {
       // Remove user data but keep the session so flash can be stored and read on next request
       delete req.session.user;
+      delete req.session.returnTo;
       req.session.save((err) => {
         if (err) return next(err);
         res.clearCookie('connect.sid');

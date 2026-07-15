@@ -34,12 +34,33 @@
         <form class="auth-form" action="/login" method="post">
           <label class="field">
             <span>Email</span>
-            <input type="email" name="email" autocomplete="email" value="<%= formData.email || '' %>" required>
+            <input
+              type="email"
+              name="email"
+              autocomplete="email"
+              value="<%= formData.email || '' %>"
+              class="<%= fieldErrors && fieldErrors.email ? 'field-input is-invalid' : 'field-input' %>"
+              aria-invalid="<%= fieldErrors && fieldErrors.email ? 'true' : 'false' %>"
+              aria-describedby="login-email-error"
+              required>
+            <% if (fieldErrors && fieldErrors.email) { %>
+              <span id="login-email-error" class="field-error"><%= fieldErrors.email %></span>
+            <% } %>
           </label>
 
           <label class="field">
             <span>Password</span>
-            <input type="password" name="password" autocomplete="current-password" required>
+            <input
+              type="password"
+              name="password"
+              autocomplete="current-password"
+              class="<%= fieldErrors && fieldErrors.password ? 'field-input is-invalid' : 'field-input' %>"
+              aria-invalid="<%= fieldErrors && fieldErrors.password ? 'true' : 'false' %>"
+              aria-describedby="login-password-error"
+              required>
+            <% if (fieldErrors && fieldErrors.password) { %>
+              <span id="login-password-error" class="field-error"><%= fieldErrors.password %></span>
+            <% } %>
           </label>
 
           <button type="submit" class="auth-button">Log In</button>

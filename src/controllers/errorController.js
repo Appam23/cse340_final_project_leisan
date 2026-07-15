@@ -5,6 +5,11 @@ export const handle404 = (req, res) => {
   res.status(404).render('404', { title: 'Page Not Found' });
 };
 
+export const handle401 = (req, res) => {
+  // This runs when a user is authenticated but not allowed to view a page (401)
+  res.status(401).render('401', { title: 'Unauthorized' });
+};
+
 export const handle500 = (err, req, res, next) => {
   // This runs when there's a server error (500)
   console.error('Server error:', err);

@@ -34,32 +34,85 @@
         <form class="auth-form" action="/register" method="post">
           <label class="field">
             <span>First Name</span>
-            <input type="text" name="firstName" autocomplete="given-name" value="<%= formData.firstName || '' %>" required>
+            <input
+              type="text"
+              name="firstName"
+              autocomplete="given-name"
+              value="<%= formData.firstName || '' %>"
+              class="<%= fieldErrors && fieldErrors.firstName ? 'field-input is-invalid' : 'field-input' %>"
+              aria-invalid="<%= fieldErrors && fieldErrors.firstName ? 'true' : 'false' %>"
+              aria-describedby="register-first-name-error"
+              required>
+            <% if (fieldErrors && fieldErrors.firstName) { %>
+              <span id="register-first-name-error" class="field-error"><%= fieldErrors.firstName %></span>
+            <% } %>
           </label>
 
           <label class="field">
             <span>Middle Name</span>
-            <input type="text" name="middleName" autocomplete="additional-name" value="<%= formData.middleName || '' %>">
+            <input type="text" name="middleName" autocomplete="additional-name" value="<%= formData.middleName || '' %>" class="field-input">
           </label>
 
           <label class="field">
             <span>Last Name</span>
-            <input type="text" name="lastName" autocomplete="family-name" value="<%= formData.lastName || '' %>" required>
+            <input
+              type="text"
+              name="lastName"
+              autocomplete="family-name"
+              value="<%= formData.lastName || '' %>"
+              class="<%= fieldErrors && fieldErrors.lastName ? 'field-input is-invalid' : 'field-input' %>"
+              aria-invalid="<%= fieldErrors && fieldErrors.lastName ? 'true' : 'false' %>"
+              aria-describedby="register-last-name-error"
+              required>
+            <% if (fieldErrors && fieldErrors.lastName) { %>
+              <span id="register-last-name-error" class="field-error"><%= fieldErrors.lastName %></span>
+            <% } %>
           </label>
 
           <label class="field">
             <span>Email</span>
-            <input type="email" name="email" autocomplete="email" value="<%= formData.email || '' %>" required>
+            <input
+              type="email"
+              name="email"
+              autocomplete="email"
+              value="<%= formData.email || '' %>"
+              class="<%= fieldErrors && fieldErrors.email ? 'field-input is-invalid' : 'field-input' %>"
+              aria-invalid="<%= fieldErrors && fieldErrors.email ? 'true' : 'false' %>"
+              aria-describedby="register-email-error"
+              required>
+            <% if (fieldErrors && fieldErrors.email) { %>
+              <span id="register-email-error" class="field-error"><%= fieldErrors.email %></span>
+            <% } %>
           </label>
 
           <label class="field">
             <span>Password</span>
-            <input type="password" name="password" autocomplete="new-password" required>
+            <input
+              type="password"
+              name="password"
+              autocomplete="new-password"
+              class="<%= fieldErrors && fieldErrors.password ? 'field-input is-invalid' : 'field-input' %>"
+              aria-invalid="<%= fieldErrors && fieldErrors.password ? 'true' : 'false' %>"
+              aria-describedby="register-password-error"
+              required>
+            <% if (fieldErrors && fieldErrors.password) { %>
+              <span id="register-password-error" class="field-error"><%= fieldErrors.password %></span>
+            <% } %>
           </label>
 
           <label class="field">
             <span>Confirm Password</span>
-            <input type="password" name="confirmPassword" autocomplete="new-password" required>
+            <input
+              type="password"
+              name="confirmPassword"
+              autocomplete="new-password"
+              class="<%= fieldErrors && fieldErrors.confirmPassword ? 'field-input is-invalid' : 'field-input' %>"
+              aria-invalid="<%= fieldErrors && fieldErrors.confirmPassword ? 'true' : 'false' %>"
+              aria-describedby="register-confirm-password-error"
+              required>
+            <% if (fieldErrors && fieldErrors.confirmPassword) { %>
+              <span id="register-confirm-password-error" class="field-error"><%= fieldErrors.confirmPassword %></span>
+            <% } %>
           </label>
 
           <button type="submit" class="auth-button">Create Account</button>

@@ -7,6 +7,7 @@ import session from 'express-session';
 import connectPgSimple from 'connect-pg-simple';
 import flash from 'connect-flash';
 import { pool } from '../config/database.js';
+import { handle401 } from '../controllers/errorController.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PgSession = connectPgSimple(session);
@@ -76,6 +77,7 @@ export const setupMiddleware = (app) => {
 
 export const requireAuth = (req, res, next) => {
   if (!res.locals.currentUser) {
+    req.session.returnTo = req.originalUrl;
     req.flash('error', 'Please log in to continue.');
     return res.redirect('/login');
   }
@@ -85,12 +87,20 @@ export const requireAuth = (req, res, next) => {
 
 export const requireAdmin = (req, res, next) => {
   if (!res.locals.currentUser) {
+    req.session.returnTo = req.originalUrl;
     req.flash('error', 'Please log in to continue.');
     return res.redirect('/login');
   }
 
   if (res.locals.currentUser.role !== 'admin') {
-    req.flash('error', 'You do not have permission to access that page.');
+    return handle401(req, res);
+  }
+
+  return next();
+};
+
+export const requireGuest = (req, res, next) => {
+  if (res.locals.currentUser) {
     return res.redirect('/');
   }
 

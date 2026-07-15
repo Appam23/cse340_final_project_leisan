@@ -10,7 +10,7 @@ import {
   postLogout,
   postRegister,
 } from '../src/controllers/authController.js';
-import { requireAdmin, requireAuth } from '../src/middleware/index.js';
+import { requireAdmin, requireAuth, requireGuest } from '../src/middleware/index.js';
 
 const router = express.Router();
 
@@ -22,9 +22,9 @@ router.get('/about', getAbout);
 router.get('/contact', getContact);
 router.get('/cars/:carId', getCarReview);
 router.post('/cars/:carId', postCarInquiry);
-router.get('/login', getLogin);
+router.get('/login', requireGuest, getLogin);
 router.post('/login', postLogin);
-router.get('/register', getRegister);
+router.get('/register', requireGuest, getRegister);
 router.post('/register', postRegister);
 router.post('/logout', postLogout);
 router.get('/admin', requireAdmin, getAdminDashboard);
