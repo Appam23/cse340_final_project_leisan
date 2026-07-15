@@ -24,8 +24,9 @@
         <% } %>
 
         <% if (typeof error !== 'undefined' && error) { %>
-          <p class="auth-message auth-message-error"><%= error %></p>
+          <p class="auth-form-summary auth-message auth-message-error" aria-live="polite"><%= error %></p>
         <% } %>
+
         <% if (typeof message !== 'undefined' && message) { %>
           <p class="auth-message auth-message-success"><%= message %></p>
         <% } %>
@@ -33,7 +34,7 @@
         <form class="auth-form" action="/login" method="post">
           <label class="field">
             <span>Email</span>
-            <input type="email" name="email" autocomplete="email" required>
+            <input type="email" name="email" autocomplete="email" value="<%= formData.email || '' %>" required>
           </label>
 
           <label class="field">

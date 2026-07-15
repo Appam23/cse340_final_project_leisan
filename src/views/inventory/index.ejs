@@ -8,7 +8,27 @@
     <%- include('../partials/header') %>
 
     <main class="page inventory-page">
-      <h1>Inventory</h1>
+      <h1><%= heading || 'Inventory' %></h1>
+
+      <nav class="inventory-category-nav" aria-label="Browse categories">
+        <a
+          class="inventory-category-link <%= !activeCategory ? 'is-active' : '' %>"
+          href="/inventory"
+        >
+          All Vehicles
+        </a>
+
+        <% if (categories && categories.length) { %>
+          <% categories.forEach((category) => { %>
+            <a
+              class="inventory-category-link <%= activeCategory && activeCategory.toLowerCase() === category.name.toLowerCase() ? 'is-active' : '' %>"
+              href="/inventory/type/<%= encodeURIComponent(category.name) %>"
+            >
+              <%= category.name %>
+            </a>
+          <% }) %>
+        <% } %>
+      </nav>
 
       <form method="GET" action="/inventory" class="inventory-search-form">
         <input
@@ -27,27 +47,51 @@
       <% } else { %>
         <ul class="inventory-grid">
           <% vehicles.forEach(v => { %>
+            <% const isFallbackCard = String(v.id || '').startsWith('fallback-'); %>
             <li class="inventory-card">
-              <a class="inventory-card-link" href="/inventory/<%= v.id %>">
-                <h3 class="inventory-card-title"><%= [v.year, v.make, v.model].filter(Boolean).join(' ') %></h3>
-                <% if (v.price !== null && v.price !== undefined) { %>
-                  <p class="inventory-card-meta">Price: $<%= Number(v.price).toLocaleString() %></p>
-                <% } %>
-                <% if (v.mileage !== null && v.mileage !== undefined) { %>
-                  <p class="inventory-card-meta">Mileage: <%= Number(v.mileage).toLocaleString() %> mi</p>
-                <% } %>
+              <% if (isFallbackCard) { %>
+                <div class="inventory-card-link inventory-card-link-static">
+                  <h3 class="inventory-card-title"><%= [v.year, v.make, v.model].filter(Boolean).join(' ') %></h3>
+                  <% if (v.price !== null && v.price !== undefined) { %>
+                    <p class="inventory-card-meta">Price: $<%= Number(v.price).toLocaleString() %></p>
+                  <% } %>
+                  <% if (v.mileage !== null && v.mileage !== undefined) { %>
+                    <p class="inventory-card-meta">Mileage: <%= Number(v.mileage).toLocaleString() %> mi</p>
+                  <% } %>
 
-                <% if (v.image_url) { %>
-                  <img
-                    src="<%= v.image_url %>"
-                    alt="<%= v.year %> <%= v.make %> <%= v.model %>"
-                    class="inventory-card-image"
-                    loading="lazy"
-                  />
-                <% } %>
+                  <% if (v.image_url) { %>
+                    <img
+                      src="<%= v.image_url %>"
+                      alt="<%= v.year %> <%= v.make %> <%= v.model %>"
+                      class="inventory-card-image"
+                      loading="lazy"
+                    />
+                  <% } %>
 
-                <span class="inventory-card-action">View Details</span>
-              </a>
+                  <span class="inventory-card-action">Preview Only</span>
+                </div>
+              <% } else { %>
+                <a class="inventory-card-link" href="/inventory/<%= v.id %>">
+                  <h3 class="inventory-card-title"><%= [v.year, v.make, v.model].filter(Boolean).join(' ') %></h3>
+                  <% if (v.price !== null && v.price !== undefined) { %>
+                    <p class="inventory-card-meta">Price: $<%= Number(v.price).toLocaleString() %></p>
+                  <% } %>
+                  <% if (v.mileage !== null && v.mileage !== undefined) { %>
+                    <p class="inventory-card-meta">Mileage: <%= Number(v.mileage).toLocaleString() %> mi</p>
+                  <% } %>
+
+                  <% if (v.image_url) { %>
+                    <img
+                      src="<%= v.image_url %>"
+                      alt="<%= v.year %> <%= v.make %> <%= v.model %>"
+                      class="inventory-card-image"
+                      loading="lazy"
+                    />
+                  <% } %>
+
+                  <span class="inventory-card-action">View Details</span>
+                </a>
+              <% } %>
             </li>
           <% }) %>
         </ul>

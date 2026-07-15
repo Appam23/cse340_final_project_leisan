@@ -20,6 +20,7 @@ export const getLogin = (req, res) => {
     title: 'Login',
     message: '',
     error: '',
+    formData: {},
   });
 };
 
@@ -28,6 +29,7 @@ export const getRegister = (req, res) => {
     title: 'Register',
     message: '',
     error: '',
+    formData: {},
   });
 };
 
@@ -45,6 +47,12 @@ export const postRegister = async (req, res, next) => {
         title: 'Register',
         message: '',
         error: 'All fields are required.',
+        formData: {
+          firstName,
+          middleName,
+          lastName,
+          email,
+        },
       });
     }
 
@@ -53,6 +61,12 @@ export const postRegister = async (req, res, next) => {
         title: 'Register',
         message: '',
         error: 'Passwords do not match.',
+        formData: {
+          firstName,
+          middleName,
+          lastName,
+          email,
+        },
       });
     }
 
@@ -63,6 +77,12 @@ export const postRegister = async (req, res, next) => {
         title: 'Register',
         message: '',
         error: 'An account with that email already exists.',
+        formData: {
+          firstName,
+          middleName,
+          lastName,
+          email,
+        },
       });
     }
 
@@ -98,6 +118,7 @@ export const postLogin = async (req, res, next) => {
         title: 'Login',
         message: '',
         error: 'Email and password are required.',
+        formData: { email },
       });
     }
 
@@ -108,6 +129,7 @@ export const postLogin = async (req, res, next) => {
         title: 'Login',
         message: '',
         error: 'Invalid email or password.',
+        formData: { email },
       });
     }
 
@@ -118,6 +140,7 @@ export const postLogin = async (req, res, next) => {
         title: 'Login',
         message: '',
         error: 'Invalid email or password.',
+        formData: { email },
       });
     }
 

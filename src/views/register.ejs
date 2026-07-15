@@ -24,8 +24,9 @@
         <% } %>
 
         <% if (typeof error !== 'undefined' && error) { %>
-          <p class="auth-message auth-message-error"><%= error %></p>
+          <p class="auth-form-summary auth-message auth-message-error" aria-live="polite"><%= error %></p>
         <% } %>
+
         <% if (typeof message !== 'undefined' && message) { %>
           <p class="auth-message auth-message-success"><%= message %></p>
         <% } %>
@@ -33,22 +34,22 @@
         <form class="auth-form" action="/register" method="post">
           <label class="field">
             <span>First Name</span>
-            <input type="text" name="firstName" autocomplete="given-name" required>
+            <input type="text" name="firstName" autocomplete="given-name" value="<%= formData.firstName || '' %>" required>
           </label>
 
           <label class="field">
             <span>Middle Name</span>
-            <input type="text" name="middleName" autocomplete="additional-name">
+            <input type="text" name="middleName" autocomplete="additional-name" value="<%= formData.middleName || '' %>">
           </label>
 
           <label class="field">
             <span>Last Name</span>
-            <input type="text" name="lastName" autocomplete="family-name" required>
+            <input type="text" name="lastName" autocomplete="family-name" value="<%= formData.lastName || '' %>" required>
           </label>
 
           <label class="field">
             <span>Email</span>
-            <input type="email" name="email" autocomplete="email" required>
+            <input type="email" name="email" autocomplete="email" value="<%= formData.email || '' %>" required>
           </label>
 
           <label class="field">

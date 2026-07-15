@@ -31,7 +31,9 @@ const buildInquiryViewModel = (req, res, carId) => {
       email: '',
       phone: '',
       message: '',
+      rating: '',
     },
+    fieldErrors: {},
     inquirySuccess: null,
     inquiryError: null,
   };
@@ -60,15 +62,34 @@ export const postCarInquiry = (req, res) => {
   const email = (req.body.email || '').trim();
   const phone = (req.body.phone || '').trim();
   const message = (req.body.message || '').trim();
+  const rating = (req.body.rating || '').trim();
+  const fieldErrors = {};
 
-  if (!name || !email || !phone) {
+  if (!name) {
+    fieldErrors.name = 'Please enter your name.';
+  }
+
+  if (!email) {
+    fieldErrors.email = 'Please enter your email address.';
+  }
+
+  if (!phone) {
+    fieldErrors.phone = 'Please enter your phone number.';
+  }
+
+  if (!['1', '2', '3', '4', '5'].includes(rating)) {
+    fieldErrors.rating = 'Please choose a star rating.';
+  }
+
+  if (Object.keys(fieldErrors).length > 0) {
     return res.status(400).render('car-review', {
       ...viewModel,
-      formData: { name, email, phone, message },
-      inquiryError: 'Please add your name, email, and phone number before submitting.',
+      formData: { name, email, phone, message, rating },
+      fieldErrors,
+      inquiryError: 'Please correct the highlighted fields before submitting.',
     });
   }
 
-  req.flash('success', `Thanks, ${name}. Your inquiry about ${viewModel.car.title} was received.`);
+  req.flash('success', `Thanks, ${name}. Your ${rating}-star inquiry about ${viewModel.car.title} was received.`);
   return res.redirect(`/cars/${viewModel.car.id}`);
 };

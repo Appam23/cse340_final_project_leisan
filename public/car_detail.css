@@ -115,6 +115,110 @@
   border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
+.detail-error-list {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: #ffd0d0;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+}
+
+.detail-form input[aria-invalid="true"],
+.detail-form textarea[aria-invalid="true"] {
+  border-color: rgba(255, 103, 103, 0.95);
+  box-shadow: 0 0 0 4px rgba(255, 103, 103, 0.12);
+}
+
+.rating-field {
+  gap: 10px;
+}
+
+.rating-group {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: fit-content;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+}
+
+.rating-group.is-invalid .rating-star {
+  border-color: rgba(255, 103, 103, 0.75);
+}
+
+.rating-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.rating-star {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(7, 12, 18, 0.9);
+  cursor: pointer;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.rating-star-icon {
+  font-size: 1.15rem;
+  line-height: 1;
+  color: #6f7a86;
+}
+
+.rating-input:checked + .rating-star,
+.rating-star:hover,
+.rating-star:hover ~ .rating-star,
+.rating-input:checked + .rating-star ~ .rating-input + .rating-star {
+  border-color: rgba(201, 106, 43, 0.7);
+  background: rgba(201, 106, 43, 0.16);
+}
+
+.rating-input:checked + .rating-star .rating-star-icon,
+.rating-star:hover .rating-star-icon,
+.rating-star:hover ~ .rating-star .rating-star-icon,
+.rating-input:checked + .rating-star ~ .rating-input + .rating-star .rating-star-icon {
+  color: #ffd36b;
+}
+
+.rating-star:focus-within {
+  outline: 2px solid rgba(201, 106, 43, 0.75);
+  outline-offset: 2px;
+}
+
+.rating-group .rating-star:hover ~ .rating-star {
+  border-color: rgba(201, 106, 43, 0.7);
+  background: rgba(201, 106, 43, 0.16);
+}
+
+.field-error {
+  margin: 0;
+  color: #ffb3b3;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.9rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .detail-grid {
   margin-top: 28px;
   display: grid;

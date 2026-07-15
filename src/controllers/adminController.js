@@ -9,6 +9,13 @@ const normalizeField = (value) => (value || '').trim();
 
 const adminRedirect = (res) => res.redirect('/admin/users');
 
+export const getAdminDashboard = async (req, res) => {
+  res.render('admin-dashboard', {
+    title: 'Admin Dashboard',
+    adminStyles: true,
+  });
+};
+
 export const getAdminUsers = async (req, res, next) => {
   try {
     const users = await findAllUsers();

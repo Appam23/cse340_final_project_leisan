@@ -1,4 +1,4 @@
-import { getVehicleById, getVehicles } from '../models/inventoryModel.js';
+import { getCategories, getVehicleById, getVehicles, getVehiclesByCategory } from '../models/inventoryModel.js';
 import { getVehicleImageFromApi } from '../services/vehicleImageService.js';
 
 const PLACEHOLDER_IMAGE = '/images/car.png';
@@ -13,6 +13,48 @@ const fallbackVehicleSeeds = [
   { year: 2020, make: 'Kia', model: 'Telluride' },
   { year: 2019, make: 'Hyundai', model: 'Sonata' },
 ];
+
+const enrichVehiclesWithImages = async (vehicles, { padToTwelve = false } = {}) => {
+  const results = [];
+
+  for (const vehicle of vehicles) {
+    const shouldFetchApiImage = needsApiImage(vehicle.image_url);
+
+    if (!shouldFetchApiImage) {
+      results.push(vehicle);
+      continue;
+    }
+
+    const apiImageUrl = await getVehicleImageFromApi(vehicle);
+    results.push({
+      ...vehicle,
+      image_url: apiImageUrl || PLACEHOLDER_IMAGE,
+    });
+  }
+
+  if (padToTwelve && results.length < TARGET_CARD_COUNT) {
+    const cardsToAdd = TARGET_CARD_COUNT - results.length;
+
+    for (let index = 0; index < cardsToAdd; index += 1) {
+      const seed = fallbackVehicleSeeds[index % fallbackVehicleSeeds.length];
+      const fallbackVehicle = {
+        id: `fallback-${index + 1}`,
+        ...seed,
+        price: null,
+        mileage: null,
+        image_url: PLACEHOLDER_IMAGE,
+      };
+      const apiImageUrl = await getVehicleImageFromApi(fallbackVehicle);
+
+      results.push({
+        ...fallbackVehicle,
+        image_url: apiImageUrl || PLACEHOLDER_IMAGE,
+      });
+    }
+  }
+
+  return results;
+};
 
 const needsApiImage = (imageUrl) => {
   if (!imageUrl) {
@@ -46,48 +88,38 @@ export async function listVehicles(req, res, next) {
     const search = req.query.search || '';
     const normalizedSearch = search.trim();
     const vehicles = await getVehicles(search);
-    const vehiclesWithApiImages = [];
-
-    for (const vehicle of vehicles) {
-      const shouldFetchApiImage = needsApiImage(vehicle.image_url);
-
-      if (!shouldFetchApiImage) {
-        vehiclesWithApiImages.push(vehicle);
-        continue;
-      }
-
-      const apiImageUrl = await getVehicleImageFromApi(vehicle);
-      vehiclesWithApiImages.push({
-        ...vehicle,
-        image_url: apiImageUrl || PLACEHOLDER_IMAGE,
-      });
-    }
-
-    if (!normalizedSearch && vehiclesWithApiImages.length < TARGET_CARD_COUNT) {
-      const cardsToAdd = TARGET_CARD_COUNT - vehiclesWithApiImages.length;
-
-      for (let index = 0; index < cardsToAdd; index += 1) {
-        const seed = fallbackVehicleSeeds[index % fallbackVehicleSeeds.length];
-        const fallbackVehicle = {
-          id: `fallback-${index + 1}`,
-          ...seed,
-          price: null,
-          mileage: null,
-          image_url: PLACEHOLDER_IMAGE,
-        };
-        const apiImageUrl = await getVehicleImageFromApi(fallbackVehicle);
-
-        vehiclesWithApiImages.push({
-          ...fallbackVehicle,
-          image_url: apiImageUrl || PLACEHOLDER_IMAGE,
-        });
-      }
-    }
+    const vehiclesWithApiImages = await enrichVehiclesWithImages(vehicles, {
+      padToTwelve: !normalizedSearch,
+    });
+    const categories = await getCategories();
 
     res.render('inventory/index', {
       title: 'Inventory',
+      heading: 'Inventory',
       vehicles: vehiclesWithApiImages,
       search,
+      categories,
+      activeCategory: null,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function categoryVehicles(req, res, next) {
+  try {
+    const categoryName = req.params.categoryName;
+    const vehicles = await getVehiclesByCategory(categoryName);
+    const vehiclesWithApiImages = await enrichVehiclesWithImages(vehicles);
+    const categories = await getCategories();
+
+    return res.render('inventory/index', {
+      title: `Category: ${categoryName}`,
+      heading: `Category: ${categoryName}`,
+      vehicles: vehiclesWithApiImages,
+      search: '',
+      categories,
+      activeCategory: categoryName,
     });
   } catch (error) {
     next(error);
@@ -121,6 +153,7 @@ export async function vehicleDetail(req, res, next) {
     return res.render('car-review', {
       title: car.title,
       car,
+      fieldErrors: {},
       inquirySuccess: null,
       inquiryError: null,
       formData: {},

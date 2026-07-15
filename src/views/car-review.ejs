@@ -17,7 +17,17 @@
           <% } %>
 
           <% if (inquiryError) { %>
-            <div class="detail-notice detail-notice-error"><%= inquiryError %></div>
+            <div class="detail-notice detail-notice-error" role="alert" aria-live="polite">
+              <strong><%= inquiryError %></strong>
+
+              <% if (fieldErrors && Object.keys(fieldErrors).length) { %>
+                <ul class="detail-error-list">
+                  <% Object.values(fieldErrors).forEach((fieldError) => { %>
+                    <li><%= fieldError %></li>
+                  <% }) %>
+                </ul>
+              <% } %>
+            </div>
           <% } %>
 
           <div class="detail-grid">
@@ -36,19 +46,43 @@
               <p class="detail-copy">This is a live listing preview built from the car gallery shown on the home page.</p>
 
               <form class="auth-form detail-form" action="/cars/<%= car.id %>" method="post">
+                <div class="field rating-field">
+                  <span>Star Rating</span>
+                  <fieldset class="rating-group <%= fieldErrors && fieldErrors.rating ? 'is-invalid' : '' %>">
+                    <legend class="sr-only">Select a rating from one to five stars</legend>
+                    <% [5, 4, 3, 2, 1].forEach((star) => { %>
+                      <input
+                        class="rating-input"
+                        type="radio"
+                        id="rating-<%= star %>"
+                        name="rating"
+                        value="<%= star %>"
+                        <%= String(formData.rating || '') === String(star) ? 'checked' : '' %>
+                      >
+                      <label class="rating-star" for="rating-<%= star %>">
+                        <span class="rating-star-icon" aria-hidden="true">★</span>
+                        <span class="sr-only"><%= star %> star<%= star === 1 ? '' : 's' %></span>
+                      </label>
+                    <% }) %>
+                  </fieldset>
+                  <% if (fieldErrors && fieldErrors.rating) { %>
+                    <p class="field-error"><%= fieldErrors.rating %></p>
+                  <% } %>
+                </div>
+
                 <div class="field">
                   <span>Name</span>
-                  <input type="text" name="name" value="<%= formData.name || '' %>" placeholder="Your full name" required>
+                  <input type="text" name="name" value="<%= formData.name || '' %>" placeholder="Your full name" required <%= fieldErrors && fieldErrors.name ? 'aria-invalid="true"' : '' %>>
                 </div>
 
                 <div class="field">
                   <span>Email</span>
-                  <input type="email" name="email" value="<%= formData.email || '' %>" placeholder="you@example.com" required>
+                  <input type="email" name="email" value="<%= formData.email || '' %>" placeholder="you@example.com" required <%= fieldErrors && fieldErrors.email ? 'aria-invalid="true"' : '' %>>
                 </div>
 
                 <div class="field">
                   <span>Phone</span>
-                  <input type="tel" name="phone" value="<%= formData.phone || '' %>" placeholder="(555) 123-4567" required>
+                  <input type="tel" name="phone" value="<%= formData.phone || '' %>" placeholder="(555) 123-4567" required <%= fieldErrors && fieldErrors.phone ? 'aria-invalid="true"' : '' %>>
                 </div>
 
                 <div class="field">

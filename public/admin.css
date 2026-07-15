@@ -103,6 +103,76 @@
   margin-bottom: 0;
 }
 
+.admin-dashboard-card {
+  width: min(100%, 920px);
+  padding: 40px;
+  border: 6px solid #ff5c2a;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 92, 42, 0.26), transparent 34%),
+    linear-gradient(180deg, rgba(15, 23, 32, 0.99), rgba(15, 23, 32, 0.92));
+  box-shadow: 0 0 0 8px rgba(255, 92, 42, 0.18), 0 28px 80px rgba(0, 0, 0, 0.5);
+}
+
+.admin-dashboard-card h1 {
+  margin-bottom: 14px;
+  color: #ffe5dc;
+}
+
+.admin-dashboard-copy {
+  color: #c7d0d8;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+}
+
+.admin-dashboard-grid {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.admin-dashboard-tile {
+  display: grid;
+  gap: 10px;
+  padding: 22px;
+  border: 1px solid rgba(255, 208, 191, 0.24);
+  border-radius: 22px;
+  background: rgba(7, 12, 18, 0.92);
+  color: var(--text);
+  text-decoration: none;
+  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+
+.admin-dashboard-tile:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 92, 42, 0.7);
+  background: rgba(12, 18, 25, 0.96);
+}
+
+.admin-dashboard-tile-label {
+  display: inline-flex;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 92, 42, 0.16);
+  color: #f6c37b;
+  font: 700 0.78rem/1 Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.admin-dashboard-tile strong {
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.admin-dashboard-tile span:last-child {
+  color: #c7d0d8;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+}
+
 .admin-table-wrap {
   margin-top: 28px;
   overflow-x: auto;

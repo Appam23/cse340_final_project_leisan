@@ -10,6 +10,37 @@
   font-size: clamp(2rem, 4.5vw, 3.2rem);
 }
 
+.inventory-category-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 22px;
+}
+
+.inventory-category-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid rgba(230, 237, 243, 0.16);
+  border-radius: 999px;
+  color: #e6edf3;
+  text-decoration: none;
+  background: rgba(15, 23, 32, 0.52);
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.inventory-category-link:hover {
+  transform: translateY(-1px);
+  border-color: rgba(201, 106, 43, 0.55);
+}
+
+.inventory-category-link.is-active {
+  background: #c96a2b;
+  border-color: #c96a2b;
+  color: #fff;
+}
+
 .inventory-search-form {
   display: flex;
   flex-wrap: wrap;
@@ -86,8 +117,16 @@
   text-decoration: none;
 }
 
+.inventory-card-link-static {
+  cursor: default;
+}
+
 .inventory-card-link:hover {
   background: rgba(255, 255, 255, 0.03);
+}
+
+.inventory-card-link-static:hover {
+  background: transparent;
 }
 
 .inventory-card-link:hover .inventory-card-title {

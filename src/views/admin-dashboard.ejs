@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main class="page">
+      <section class="auth-card admin-dashboard-card">
+        <p class="admin-edit-banner">Admin only</p>
+        <h1>Admin Dashboard</h1>
+        <p class="lead admin-dashboard-copy">Choose a management area to continue.</p>
+
+        <div class="admin-dashboard-grid">
+          <a class="admin-dashboard-tile" href="/admin/users">
+            <span class="admin-dashboard-tile-label">Users</span>
+            <strong>Manage Accounts</strong>
+            <span>View, edit, and remove users.</span>
+          </a>
+
+          <a class="admin-dashboard-tile" href="/inventory">
+            <span class="admin-dashboard-tile-label">Inventory</span>
+            <strong>Browse Listings</strong>
+            <span>Review vehicles by type and detail page.</span>
+          </a>
+        </div>
+      </section>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>
