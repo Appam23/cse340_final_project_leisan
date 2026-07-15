@@ -16,6 +16,7 @@ const router = express.Router();
 
 router.get('/', getHome);
 router.get('/inventory', requireAuth, inventoryController.listVehicles);
+router.get('/inventory/:id', requireAuth, inventoryController.vehicleDetail);
 router.get('/about', getAbout);
 router.get('/contact', getContact);
 router.get('/cars/:carId', getCarReview);

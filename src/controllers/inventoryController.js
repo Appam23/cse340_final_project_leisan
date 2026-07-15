@@ -1,4 +1,4 @@
-import { getVehicles } from '../models/inventoryModel.js';
+import { getVehicleById, getVehicles } from '../models/inventoryModel.js';
 import { getVehicleImageFromApi } from '../services/vehicleImageService.js';
 
 const PLACEHOLDER_IMAGE = '/images/car.png';
@@ -88,6 +88,42 @@ export async function listVehicles(req, res, next) {
       title: 'Inventory',
       vehicles: vehiclesWithApiImages,
       search,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function vehicleDetail(req, res, next) {
+  try {
+    const vehicle = await getVehicleById(req.params.id);
+
+    if (!vehicle) {
+      return res.status(404).render('404', { title: 'Not Found' });
+    }
+
+    const imageUrl = needsApiImage(vehicle.image_url)
+      ? await getVehicleImageFromApi(vehicle) || vehicle.image_url || PLACEHOLDER_IMAGE
+      : vehicle.image_url || PLACEHOLDER_IMAGE;
+
+    const car = {
+      id: vehicle.id,
+      title: `${vehicle.year} ${vehicle.make} ${vehicle.model}`,
+      src: imageUrl,
+      attribution: 'Inventory listing',
+      price: vehicle.price ? new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+      }).format(vehicle.price) : 'Contact for price',
+    };
+
+    return res.render('car-review', {
+      title: car.title,
+      car,
+      inquirySuccess: null,
+      inquiryError: null,
+      formData: {},
     });
   } catch (error) {
     next(error);

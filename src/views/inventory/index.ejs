@@ -28,22 +28,26 @@
         <ul class="inventory-grid">
           <% vehicles.forEach(v => { %>
             <li class="inventory-card">
-              <h3 class="inventory-card-title"><%= [v.year, v.make, v.model].filter(Boolean).join(' ') %></h3>
-              <% if (v.price !== null && v.price !== undefined) { %>
-                <p class="inventory-card-meta">Price: $<%= Number(v.price).toLocaleString() %></p>
-              <% } %>
-              <% if (v.mileage !== null && v.mileage !== undefined) { %>
-                <p class="inventory-card-meta">Mileage: <%= Number(v.mileage).toLocaleString() %> mi</p>
-              <% } %>
+              <a class="inventory-card-link" href="/inventory/<%= v.id %>">
+                <h3 class="inventory-card-title"><%= [v.year, v.make, v.model].filter(Boolean).join(' ') %></h3>
+                <% if (v.price !== null && v.price !== undefined) { %>
+                  <p class="inventory-card-meta">Price: $<%= Number(v.price).toLocaleString() %></p>
+                <% } %>
+                <% if (v.mileage !== null && v.mileage !== undefined) { %>
+                  <p class="inventory-card-meta">Mileage: <%= Number(v.mileage).toLocaleString() %> mi</p>
+                <% } %>
 
-              <% if (v.image_url) { %>
-                <img
-                  src="<%= v.image_url %>"
-                  alt="<%= v.year %> <%= v.make %> <%= v.model %>"
-                  class="inventory-card-image"
-                  loading="lazy"
-                />
-              <% } %>
+                <% if (v.image_url) { %>
+                  <img
+                    src="<%= v.image_url %>"
+                    alt="<%= v.year %> <%= v.make %> <%= v.model %>"
+                    class="inventory-card-image"
+                    loading="lazy"
+                  />
+                <% } %>
+
+                <span class="inventory-card-action">View Details</span>
+              </a>
             </li>
           <% }) %>
         </ul>

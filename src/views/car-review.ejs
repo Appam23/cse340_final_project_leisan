@@ -22,7 +22,11 @@
 
           <div class="detail-grid">
             <figure class="detail-figure">
-              <img class="detail-image" src="<%= car.src %>" alt="<%= car.title || 'Car image' %>">
+              <img
+                class="detail-image"
+                src="<%= car.src || car.image_url || '/images/car.png' %>"
+                alt="<%= car.title || 'Car image' %>"
+              >
               <figcaption><%= car.attribution %></figcaption>
             </figure>
 

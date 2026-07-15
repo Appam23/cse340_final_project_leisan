@@ -57,3 +57,33 @@ export async function getVehicles(search = '') {
   const { rows } = await pool.query(sql);
   return rows;
 }
+
+export async function getVehicleById(id) {
+  const sql = `
+    SELECT
+      v.id,
+      v.year,
+      v.make,
+      v.model,
+      v.price,
+      v.mileage,
+      v.description,
+      CASE
+        WHEN vi.image_url IS NULL OR btrim(vi.image_url) = '' THEN '/images/car.png'
+        WHEN vi.image_url ILIKE 'http://%' THEN regexp_replace(vi.image_url, '^http://', 'https://')
+        WHEN vi.image_url ~* '^https://.*' THEN vi.image_url
+        WHEN vi.image_url LIKE '/%' THEN vi.image_url
+        WHEN vi.image_url ILIKE 'images/%' THEN '/' || vi.image_url
+        ELSE '/images/car.png'
+      END AS image_url
+    FROM vehicles v
+    LEFT JOIN vehicle_images vi
+      ON vi.vehicle_id = v.id
+     AND vi.is_primary = true
+    WHERE v.id = $1
+    LIMIT 1
+  `;
+
+  const { rows } = await pool.query(sql, [id]);
+  return rows[0] || null;
+}
