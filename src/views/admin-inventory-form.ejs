@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main class="page">
+      <section class="auth-card admin-edit-card">
+        <p class="admin-edit-banner">Admin only</p>
+        <h1>Add Vehicle</h1>
+        <p>Create a new vehicle listing for the inventory.</p>
+
+        <% if (error) { %>
+          <p class="auth-message auth-message-error"><%= error %></p>
+        <% } %>
+
+        <form action="/admin/inventory/new" method="post" class="auth-form">
+          <label>
+            Category
+            <select name="categoryId" required>
+              <option value="">Select a category</option>
+              <% categories.forEach((category) => { %>
+                <option value="<%= category.id %>" <%= String(formData.categoryId || '') === String(category.id) ? 'selected' : '' %>><%= category.name %></option>
+              <% }) %>
+            </select>
+          </label>
+
+          <label>
+            Year
+            <input type="number" name="year" min="1900" max="2100" value="<%= formData.year || '' %>" required>
+          </label>
+
+          <label>
+            Make
+            <input type="text" name="make" value="<%= formData.make || '' %>" required>
+          </label>
+
+          <label>
+            Model
+            <input type="text" name="model" value="<%= formData.model || '' %>" required>
+          </label>
+
+          <label>
+            Trim
+            <input type="text" name="trim" value="<%= formData.trim || '' %>">
+          </label>
+
+          <label>
+            Mileage
+            <input type="number" name="mileage" min="0" value="<%= formData.mileage || '' %>" required>
+          </label>
+
+          <label>
+            VIN
+            <input type="text" name="vin" maxlength="17" value="<%= formData.vin || '' %>">
+          </label>
+
+          <label>
+            Color
+            <input type="text" name="color" value="<%= formData.color || '' %>">
+          </label>
+
+          <label>
+            Transmission
+            <input type="text" name="transmission" value="<%= formData.transmission || '' %>">
+          </label>
+
+          <label>
+            Fuel Type
+            <input type="text" name="fuelType" value="<%= formData.fuelType || '' %>">
+          </label>
+
+          <label>
+            Drivetrain
+            <input type="text" name="drivetrain" value="<%= formData.drivetrain || '' %>">
+          </label>
+
+          <label>
+            Engine
+            <input type="text" name="engine" value="<%= formData.engine || '' %>">
+          </label>
+
+          <label>
+            Description
+            <textarea name="description" rows="4"><%= formData.description || '' %></textarea>
+          </label>
+
+          <label>
+            Price
+            <input type="number" name="price" min="0" step="0.01" value="<%= formData.price || '' %>" required>
+          </label>
+
+          <label>
+            Image URL
+            <input
+              type="url"
+              name="imageUrl"
+              id="image-url-input"
+              value="<%= formData.imageUrl || '' %>"
+              placeholder="https://example.com/car.jpg"
+            >
+            <small class="field-help">Use a direct image link, not a webpage link.</small>
+          </label>
+
+          <label>
+            Image Alt Text
+            <input type="text" name="altText" value="<%= formData.altText || '' %>">
+          </label>
+
+          <div class="admin-image-preview-wrap">
+            <p class="admin-image-preview-label">Image preview</p>
+            <img
+              id="admin-image-preview"
+              class="admin-image-preview"
+              src="<%= formData.imageUrl || '/images/car.png' %>"
+              alt="Vehicle image preview"
+            />
+          </div>
+
+          <label>
+            <span>Availability</span>
+            <select name="isAvailable">
+              <option value="on" <%= formData.isAvailable !== false ? 'selected' : '' %>>Available</option>
+              <option value="off" <%= formData.isAvailable === false ? 'selected' : '' %>>Unavailable</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Featured</span>
+            <select name="featured">
+              <option value="off" <%= formData.featured !== true ? 'selected' : '' %>>No</option>
+              <option value="on" <%= formData.featured === true ? 'selected' : '' %>>Yes</option>
+            </select>
+          </label>
+
+          <div class="auth-actions">
+            <button type="submit" class="site-auth-button">Create Vehicle</button>
+            <a class="site-auth-button" href="/admin/inventory">Cancel</a>
+          </div>
+        </form>
+      </section>
+    </main>
+    <%- include('partials/footer') %>
+    <script>
+      (() => {
+        const input = document.getElementById('image-url-input');
+        const preview = document.getElementById('admin-image-preview');
+
+        if (!input || !preview) {
+          return;
+        }
+
+        input.addEventListener('input', () => {
+          const value = input.value.trim();
+          preview.src = value || '/images/car.png';
+        });
+
+        preview.addEventListener('error', () => {
+          preview.src = '/images/car.png';
+        });
+      })();
+    </script>
+  </body>
+</html>

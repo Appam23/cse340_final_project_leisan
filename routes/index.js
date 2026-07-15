@@ -2,7 +2,19 @@ import express from 'express';
 import * as inventoryController from '../src/controllers/inventoryController.js';
 import { getHome } from '../src/controllers/homeController.js';
 import { getAbout, getCarReview, getContact, postCarInquiry } from '../src/controllers/pageController.js';
-import { getAdminDashboard, getAdminUsers, getEditUser, postDeleteUser, postEditUser } from '../src/controllers/adminController.js';
+import {
+  getAdminDashboard,
+  getAdminInventory,
+  getAdminUsers,
+  getEditUser,
+  getNewInventoryVehicle,
+  getEditInventoryVehicle,
+  postDeleteUser,
+  postEditUser,
+  postDeleteInventoryVehicle,
+  postNewInventoryVehicle,
+  postEditInventoryVehicle,
+} from '../src/controllers/adminController.js';
 import {
   getLogin,
   getRegister,
@@ -28,6 +40,12 @@ router.get('/register', requireGuest, getRegister);
 router.post('/register', postRegister);
 router.post('/logout', postLogout);
 router.get('/admin', requireAdmin, getAdminDashboard);
+router.get('/admin/inventory', requireAdmin, getAdminInventory);
+router.get('/admin/inventory/new', requireAdmin, getNewInventoryVehicle);
+router.post('/admin/inventory/new', requireAdmin, postNewInventoryVehicle);
+router.get('/admin/inventory/:vehicleId/edit', requireAdmin, getEditInventoryVehicle);
+router.post('/admin/inventory/:vehicleId/edit', requireAdmin, postEditInventoryVehicle);
+router.post('/admin/inventory/:vehicleId/delete', requireAdmin, postDeleteInventoryVehicle);
 router.get('/admin/users', requireAdmin, getAdminUsers);
 router.get('/admin/users/:userId/edit', requireAdmin, getEditUser);
 router.post('/admin/users/:userId/edit', requireAdmin, postEditUser);

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main class="page">
+      <section class="auth-card admin-panel">
+        <p class="admin-edit-banner">Admin only</p>
+        <h1>Inventory Management</h1>
+        <p class="lead admin-panel-copy">Review the current vehicle list and add new inventory items.</p>
+
+        <% if (messages && messages.success && messages.success.length) { %>
+          <% messages.success.forEach((message) => { %>
+            <p class="auth-message auth-message-success"><%= message %></p>
+          <% }) %>
+        <% } %>
+
+        <% if (messages && messages.error && messages.error.length) { %>
+          <% messages.error.forEach((message) => { %>
+            <p class="auth-message auth-message-error"><%= message %></p>
+          <% }) %>
+        <% } %>
+
+        <div class="admin-actions">
+          <a class="auth-button" href="/admin/inventory/new">Add Vehicle</a>
+          <a class="auth-button" href="/admin">Dashboard</a>
+        </div>
+
+        <% if (vehicles.length === 0) { %>
+          <p class="admin-panel-copy">No vehicles found.</p>
+        <% } else { %>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Vehicle</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Availability</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% vehicles.forEach((vehicle) => { %>
+                  <tr>
+                    <td data-label="Image">
+                      <img
+                        src="<%= vehicle.image_url || '/images/car.png' %>"
+                        alt="<%= [vehicle.year, vehicle.make, vehicle.model].filter(Boolean).join(' ') %>"
+                        class="admin-inventory-thumb"
+                        onerror="this.onerror=null;this.src='/images/car.png';"
+                      />
+                    </td>
+                    <td data-label="Vehicle"><%= [vehicle.year, vehicle.make, vehicle.model].filter(Boolean).join(' ') %></td>
+                    <td data-label="Category"><%= vehicle.category_name %></td>
+                    <td data-label="Price"><%= new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(vehicle.price) %></td>
+                    <td data-label="Availability"><%= vehicle.is_available ? 'Available' : 'Unavailable' %></td>
+                    <td data-label="Actions">
+                      <div class="inventory-row-actions">
+                        <a class="site-auth-button" href="/inventory/<%= vehicle.id %>">View</a>
+                        <a class="site-auth-button" href="/admin/inventory/<%= vehicle.id %>/edit">Edit</a>
+                        <form action="/admin/inventory/<%= vehicle.id %>/delete" method="post" onsubmit="return confirm('Delete this vehicle?');">
+                          <button type="submit" class="site-auth-button">Delete</button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </section>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>
