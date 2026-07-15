@@ -56,10 +56,62 @@
   outline: none;
 }
 
+.admin-edit-card .auth-form textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 16px;
+  font: inherit;
+  color: var(--text);
+  background: rgba(7, 12, 18, 0.98);
+  outline: none;
+  resize: vertical;
+  min-height: 120px;
+}
+
 .admin-edit-card .auth-form input:focus,
-.admin-edit-card .auth-form select:focus {
+.admin-edit-card .auth-form select:focus,
+.admin-edit-card .auth-form textarea:focus {
   border-color: #ff5c2a;
   box-shadow: 0 0 0 5px rgba(255, 92, 42, 0.2);
+}
+
+.field-help {
+  display: block;
+  margin-top: 2px;
+  color: #9fb0be;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.admin-image-preview-wrap {
+  display: grid;
+  gap: 10px;
+  margin-top: 6px;
+  padding: 16px;
+  border: 1px dashed rgba(255, 208, 191, 0.26);
+  border-radius: 20px;
+  background: rgba(7, 12, 18, 0.58);
+}
+
+.admin-image-preview-label {
+  margin: 0;
+  color: #f6c37b;
+  font: 700 0.85rem/1 Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.admin-image-preview {
+  display: block;
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 208, 191, 0.28);
+  background: rgba(7, 12, 18, 0.92);
 }
 
 .admin-edit-card .auth-message-error {
@@ -205,6 +257,22 @@
   font-size: 0.95rem;
 }
 
+.inventory-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-inventory-thumb {
+  display: block;
+  width: 88px;
+  height: 58px;
+  border-radius: 14px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 208, 191, 0.28);
+  background: rgba(7, 12, 18, 0.92);
+}
+
 .role-pill {
   display: inline-flex;
   align-items: center;
@@ -251,5 +319,32 @@
 @media (max-width: 520px) {
   .admin-table-wrap {
     margin-top: 20px;
+  }
+
+  .admin-edit-card {
+    padding: 24px;
+    border-radius: 26px;
+  }
+
+  .admin-edit-card .auth-form {
+    margin-top: 24px;
+  }
+
+  .admin-edit-card .auth-actions {
+    margin-top: 36px;
+    flex-direction: column;
+  }
+
+  .auth-actions .site-auth-button {
+    width: 100%;
+  }
+
+  .admin-inventory-thumb {
+    width: 72px;
+    height: 48px;
+  }
+
+  .admin-image-preview {
+    max-width: 100%;
   }
 }
