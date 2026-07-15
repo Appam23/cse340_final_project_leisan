@@ -99,6 +99,20 @@ export const requireAdmin = (req, res, next) => {
   return next();
 };
 
+export const requireInventoryStaff = (req, res, next) => {
+  if (!res.locals.currentUser) {
+    req.session.returnTo = req.originalUrl;
+    req.flash('error', 'Please log in to continue.');
+    return res.redirect('/login');
+  }
+
+  if (!['user', 'employee', 'admin'].includes(res.locals.currentUser.role)) {
+    return handle401(req, res);
+  }
+
+  return next();
+};
+
 export const requireGuest = (req, res, next) => {
   if (res.locals.currentUser) {
     return res.redirect('/');

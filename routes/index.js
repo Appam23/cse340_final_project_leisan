@@ -22,7 +22,7 @@ import {
   postLogout,
   postRegister,
 } from '../src/controllers/authController.js';
-import { requireAdmin, requireAuth, requireGuest } from '../src/middleware/index.js';
+import { requireAdmin, requireAuth, requireGuest, requireInventoryStaff } from '../src/middleware/index.js';
 
 const router = express.Router();
 
@@ -40,12 +40,12 @@ router.get('/register', requireGuest, getRegister);
 router.post('/register', postRegister);
 router.post('/logout', postLogout);
 router.get('/admin', requireAdmin, getAdminDashboard);
-router.get('/admin/inventory', requireAdmin, getAdminInventory);
-router.get('/admin/inventory/new', requireAdmin, getNewInventoryVehicle);
-router.post('/admin/inventory/new', requireAdmin, postNewInventoryVehicle);
-router.get('/admin/inventory/:vehicleId/edit', requireAdmin, getEditInventoryVehicle);
-router.post('/admin/inventory/:vehicleId/edit', requireAdmin, postEditInventoryVehicle);
-router.post('/admin/inventory/:vehicleId/delete', requireAdmin, postDeleteInventoryVehicle);
+router.get('/admin/inventory', requireInventoryStaff, getAdminInventory);
+router.get('/admin/inventory/new', requireInventoryStaff, getNewInventoryVehicle);
+router.post('/admin/inventory/new', requireInventoryStaff, postNewInventoryVehicle);
+router.get('/admin/inventory/:vehicleId/edit', requireInventoryStaff, getEditInventoryVehicle);
+router.post('/admin/inventory/:vehicleId/edit', requireInventoryStaff, postEditInventoryVehicle);
+router.post('/admin/inventory/:vehicleId/delete', requireInventoryStaff, postDeleteInventoryVehicle);
 router.get('/admin/users', requireAdmin, getAdminUsers);
 router.get('/admin/users/:userId/edit', requireAdmin, getEditUser);
 router.post('/admin/users/:userId/edit', requireAdmin, postEditUser);
