@@ -25,7 +25,7 @@ export const setupMiddleware = (app) => {
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
-          imgSrc: ["'self'", 'data:', 'https://api.openverse.org', 'https://live.staticflickr.com'],
+          imgSrc: ["'self'", 'data:', 'https:', 'https://api.openverse.org', 'https://live.staticflickr.com'],
         },
       },
     })

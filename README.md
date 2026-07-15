@@ -84,6 +84,7 @@ The app reads the following environment variables:
 - `PGPASSWORD` - database password
 - `SESSION_SECRET` - session signing secret
 - `ADMIN_EMAIL` - email address that should be promoted to admin on registration/login
+- `UNSPLASH_ACCESS_KEY` - Unsplash API access key for live inventory vehicle images
 
 If `DATABASE_URL` is set, it is used first. Otherwise the app falls back to the individual `PG*` values.
 

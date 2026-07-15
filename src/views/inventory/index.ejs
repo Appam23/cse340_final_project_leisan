@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head') %>
+    <link rel="stylesheet" href="/inventory.css" />
+  </head>
+  <body>
+    <%- include('../partials/header') %>
+
+    <main class="page inventory-page">
+      <h1>Inventory</h1>
+
+      <form method="GET" action="/inventory" class="inventory-search-form">
+        <input
+          type="text"
+          name="search"
+          value="<%= search %>"
+          class="inventory-search-input"
+          placeholder="Search make or model (e.g., Honda)"
+        />
+        <button type="submit" class="inventory-search-button">Search</button>
+        <a href="/inventory" class="inventory-clear-link">Clear</a>
+      </form>
+
+      <% if (!vehicles || vehicles.length === 0) { %>
+        <p class="inventory-empty">Vehicles not found.</p>
+      <% } else { %>
+        <ul class="inventory-grid">
+          <% vehicles.forEach(v => { %>
+            <li class="inventory-card">
+              <h3 class="inventory-card-title"><%= [v.year, v.make, v.model].filter(Boolean).join(' ') %></h3>
+              <% if (v.price !== null && v.price !== undefined) { %>
+                <p class="inventory-card-meta">Price: $<%= Number(v.price).toLocaleString() %></p>
+              <% } %>
+              <% if (v.mileage !== null && v.mileage !== undefined) { %>
+                <p class="inventory-card-meta">Mileage: <%= Number(v.mileage).toLocaleString() %> mi</p>
+              <% } %>
+
+              <% if (v.image_url) { %>
+                <img
+                  src="<%= v.image_url %>"
+                  alt="<%= v.year %> <%= v.make %> <%= v.model %>"
+                  class="inventory-card-image"
+                  loading="lazy"
+                />
+              <% } %>
+            </li>
+          <% }) %>
+        </ul>
+      <% } %>
+    </main>
+
+    <%- include('../partials/footer') %>
+  </body>
+</html>

@@ -1,4 +1,5 @@
-import { Router } from 'express';
+import express from 'express';
+import * as inventoryController from '../src/controllers/inventoryController.js';
 import { getHome } from '../src/controllers/homeController.js';
 import { getAbout, getCarReview, getContact, postCarInquiry } from '../src/controllers/pageController.js';
 import { getAdminUsers, getEditUser, postDeleteUser, postEditUser } from '../src/controllers/adminController.js';
@@ -9,11 +10,12 @@ import {
   postLogout,
   postRegister,
 } from '../src/controllers/authController.js';
-import { requireAdmin } from '../src/middleware/index.js';
+import { requireAdmin, requireAuth } from '../src/middleware/index.js';
 
-const router = Router();
+const router = express.Router();
 
 router.get('/', getHome);
+router.get('/inventory', requireAuth, inventoryController.listVehicles);
 router.get('/about', getAbout);
 router.get('/contact', getContact);
 router.get('/cars/:carId', getCarReview);

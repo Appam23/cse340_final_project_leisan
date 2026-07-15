@@ -5,6 +5,9 @@
   </a>
   <nav class="site-nav" aria-label="Primary">
     <a href="/">Home</a>
+    <% if (currentUser) { %>
+      <a href="/inventory">Inventory</a>
+    <% } %>
     <a href="/about">About</a>
     <a href="/contact">Contact</a>
     <% if (currentUser) { %>
