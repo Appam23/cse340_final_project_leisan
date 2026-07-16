@@ -1,8 +1,11 @@
 import { getCategories, getVehicleById, getVehicles, getVehiclesByCategory } from '../models/inventoryModel.js';
+import {
+  buildVehicleSpecs,
+  needsApiImage,
+  PLACEHOLDER_IMAGE,
+} from '../services/vehiclePresentationService.js';
 import { getVehicleImageFromApi } from '../services/vehicleImageService.js';
 
-const PLACEHOLDER_IMAGE = '/images/car.png';
-const ABSOLUTE_HTTP_URL = /^https?:\/\//i;
 const TARGET_CARD_COUNT = 12;
 
 const fallbackVehicleSeeds = [
@@ -54,33 +57,6 @@ const enrichVehiclesWithImages = async (vehicles, { padToTwelve = false } = {}) 
   }
 
   return results;
-};
-
-const needsApiImage = (imageUrl) => {
-  if (!imageUrl) {
-    return true;
-  }
-
-  const value = imageUrl.trim();
-
-  if (!value || value === PLACEHOLDER_IMAGE) {
-    return true;
-  }
-
-  if (value.startsWith('/images/vehicles/')) {
-    return true;
-  }
-
-  if (ABSOLUTE_HTTP_URL.test(value)) {
-    return false;
-  }
-
-  if (value.startsWith('/')) {
-    return false;
-  }
-
-  // Filename-only and relative paths are broken under /inventory and should use API.
-  return true;
 };
 
 export async function listVehicles(req, res, next) {
@@ -148,15 +124,7 @@ export async function vehicleDetail(req, res, next) {
         currency: 'USD',
         maximumFractionDigits: 0,
       }).format(vehicle.price) : 'Contact for price',
-      specs: {
-        year: vehicle.year ?? null,
-        make: vehicle.make ?? null,
-        model: vehicle.model ?? null,
-        mileage: vehicle.mileage ?? null,
-        availability: typeof vehicle.availability === 'boolean' ? (vehicle.availability ? 'Available' : 'Unavailable') : null,
-        description: vehicle.description || '',
-        category: vehicle.category_name || null,
-      },
+      specs: buildVehicleSpecs(vehicle),
     };
 
     return res.render('car-review', {

@@ -1,5 +1,10 @@
 import { createContactMessage } from '../models/contactModel.js';
 import { getVehicleById } from '../models/inventoryModel.js';
+import {
+  buildVehicleSpecs,
+  needsApiImage,
+  PLACEHOLDER_IMAGE,
+} from '../services/vehiclePresentationService.js';
 import { getVehicleImageFromApi } from '../services/vehicleImageService.js';
 import { createServiceRequest, getServiceRequestsByUserAndVehicle } from '../models/serviceRequestModel.js';
 import {
@@ -11,8 +16,6 @@ import {
 } from '../models/reviewModel.js';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PLACEHOLDER_IMAGE = '/images/car.png';
-const ABSOLUTE_HTTP_URL = /^https?:\/\//i;
 const SERVICE_TYPE_LABELS = {
   oil_change: 'Oil Change',
   inspection: 'Inspection',
@@ -117,32 +120,6 @@ const findShowcaseCar = (req, carId) => {
   return cars.find((car) => car.id === carId);
 };
 
-const needsApiImage = (imageUrl) => {
-  if (!imageUrl) {
-    return true;
-  }
-
-  const value = imageUrl.trim();
-
-  if (!value || value === PLACEHOLDER_IMAGE) {
-    return true;
-  }
-
-  if (value.startsWith('/images/vehicles/')) {
-    return true;
-  }
-
-  if (ABSOLUTE_HTTP_URL.test(value)) {
-    return false;
-  }
-
-  if (value.startsWith('/')) {
-    return false;
-  }
-
-  return true;
-};
-
 const formatVehiclePrice = (price) => {
   if (price == null) {
     return 'Contact for price';
@@ -154,16 +131,6 @@ const formatVehiclePrice = (price) => {
     maximumFractionDigits: 0,
   }).format(price);
 };
-
-const buildVehicleSpecs = (vehicle = {}) => ({
-  year: vehicle.year ?? null,
-  make: vehicle.make ?? null,
-  model: vehicle.model ?? null,
-  mileage: vehicle.mileage ?? null,
-  availability: typeof vehicle.availability === 'boolean' ? (vehicle.availability ? 'Available' : 'Unavailable') : null,
-  description: vehicle.description || '',
-  category: vehicle.category_name || null,
-});
 
 const buildInquiryViewModel = async (req, carId, overrides = {}) => {
   let car = findShowcaseCar(req, carId);

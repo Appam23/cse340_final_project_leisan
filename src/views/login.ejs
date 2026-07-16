@@ -11,18 +11,6 @@
         <h1 id="login-heading">Login</h1>
         <p class="lead">Sign in to manage your account, saved vehicles, and dealership activity.</p>
 
-        <% if (messages && messages.success && messages.success.length) { %>
-          <% messages.success.forEach(m => { %>
-            <p class="auth-message auth-message-success"><%= m %></p>
-          <% }) %>
-        <% } %>
-
-        <% if (messages && messages.error && messages.error.length) { %>
-          <% messages.error.forEach(m => { %>
-            <p class="auth-message auth-message-error"><%= m %></p>
-          <% }) %>
-        <% } %>
-
         <% if (typeof error !== 'undefined' && error) { %>
           <p class="auth-form-summary auth-message auth-message-error" aria-live="polite"><%= error %></p>
         <% } %>

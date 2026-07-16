@@ -11,18 +11,6 @@
         <h1>Inventory Management</h1>
         <p class="lead admin-panel-copy">Review the current vehicle list and manage inventory items.</p>
 
-        <% if (messages && messages.success && messages.success.length) { %>
-          <% messages.success.forEach((message) => { %>
-            <p class="auth-message auth-message-success"><%= message %></p>
-          <% }) %>
-        <% } %>
-
-        <% if (messages && messages.error && messages.error.length) { %>
-          <% messages.error.forEach((message) => { %>
-            <p class="auth-message auth-message-error"><%= message %></p>
-          <% }) %>
-        <% } %>
-
         <div class="admin-actions">
           <a class="auth-button" href="/admin/inventory/new">Add Vehicle</a>
           <a class="auth-button" href="/employee">Dashboard</a>

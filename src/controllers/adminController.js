@@ -30,6 +30,7 @@ import {
 } from '../models/reviewModel.js';
 import { getAllContactMessages } from '../models/contactModel.js';
 import { getSystemOverview } from '../models/adminModel.js';
+import { needsApiImage, PLACEHOLDER_IMAGE } from '../services/vehiclePresentationService.js';
 import { getVehicleImageFromApi } from '../services/vehicleImageService.js';
 
 const normalizeField = (value) => (value || '').trim();
@@ -38,8 +39,6 @@ const toPositiveInt = (value, fallback) => {
   const parsed = Number.parseInt(String(value || ''), 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 };
-const PLACEHOLDER_IMAGE = '/images/car.png';
-const ABSOLUTE_HTTP_URL = /^https?:\/\//i;
 const ADMIN_USER_ROLE_FILTERS = new Set(['customer', 'employee', 'owner']);
 
 const splitName = (name = '') => {
@@ -69,32 +68,6 @@ const splitName = (name = '') => {
 
 const buildName = (firstName, middleName, lastName) => [firstName, middleName, lastName].filter(Boolean).join(' ');
 
-const needsApiImage = (imageUrl) => {
-  if (!imageUrl) {
-    return true;
-  }
-
-  const value = imageUrl.trim();
-
-  if (!value || value === PLACEHOLDER_IMAGE) {
-    return true;
-  }
-
-  if (value.startsWith('/images/vehicles/')) {
-    return true;
-  }
-
-  if (ABSOLUTE_HTTP_URL.test(value)) {
-    return false;
-  }
-
-  if (value.startsWith('/')) {
-    return false;
-  }
-
-  return true;
-};
-
 const enrichVehiclesWithImages = async (vehicles) => {
   const results = [];
 
@@ -115,7 +88,6 @@ const enrichVehiclesWithImages = async (vehicles) => {
 };
 
 const adminRedirect = (res) => res.redirect('/admin/users');
-const employeeDashboardRedirect = (res) => res.redirect('/employee');
 const categoriesRedirect = (res) => res.redirect('/admin/categories');
 const inventoryRedirect = (res) => res.redirect('/admin/inventory');
 const serviceRequestsRedirect = (res) => res.redirect('/admin/service-requests');
