@@ -1,11 +1,3 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <%- include('partials/head') %>
-  </head>
-  <body>
-    <%- include('partials/header') %>
-    <main class="page">
       <p class="eyebrow">CSE340 Final Project</p>
       <a class="featured-car-link" href="<%= featuredCar.detailHref %>">
         <img class="car-photo" src="<%= featuredCar.src %>" alt="<%= featuredCar.title || 'Car photo' %>">
@@ -102,7 +94,3 @@
       <% } else { %>
         <p class="api-meta">Image gallery could not load right now.</p>
       <% } %>
-    </main>
-    <%- include('partials/footer') %>
-  </body>
-</html>

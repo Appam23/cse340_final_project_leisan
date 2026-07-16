@@ -1,28 +1,3 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <%- include('partials/head') %>
-  </head>
-  <body>
-    <%
-      const buildActivityLink = (overrides = {}) => {
-        const params = new URLSearchParams({
-          usersPage: String(usersPagination?.page || 1),
-          servicePage: String(servicePagination?.page || 1),
-          reviewsPage: String(reviewsPagination?.page || 1),
-          contactsPage: String(contactsPagination?.page || 1),
-          pageSize: String(pageSize || 5),
-        });
-
-        Object.entries(overrides).forEach(([key, value]) => {
-          params.set(key, String(value));
-        });
-
-        return `/admin/activity?${params.toString()}`;
-      };
-    %>
-    <%- include('partials/header') %>
-    <main class="page">
       <section class="auth-card admin-panel">
         <p class="admin-edit-banner">Owner area</p>
         <h1>System Activity</h1>
@@ -217,7 +192,3 @@
           </div>
         <% } %>
       </section>
-    </main>
-    <%- include('partials/footer') %>
-  </body>
-</html>

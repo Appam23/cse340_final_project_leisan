@@ -76,6 +76,8 @@ export async function listVehicles(req, res, next) {
       search,
       categories,
       activeCategory: null,
+      mainClass: 'inventory-page',
+      extraStyles: ['/style/inventory.css'],
     });
   } catch (error) {
     next(error);
@@ -96,6 +98,8 @@ export async function categoryVehicles(req, res, next) {
       search: '',
       categories,
       activeCategory: categoryName,
+      mainClass: 'inventory-page',
+      extraStyles: ['/style/inventory.css'],
     });
   } catch (error) {
     next(error);
@@ -129,6 +133,7 @@ export async function vehicleDetail(req, res, next) {
 
     return res.render('car-review', {
       title: car.title,
+      mainClass: 'detail-page',
       car,
       fieldErrors: {},
       inquirySuccess: null,

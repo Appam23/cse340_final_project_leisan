@@ -1,11 +1,3 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <%- include('partials/head') %>
-  </head>
-  <body>
-    <%- include('partials/header') %>
-    <main class="page">
       <section class="auth-card admin-edit-card">
         <p class="admin-edit-banner">Admin only</p>
         <h1><%= mode === 'create' ? 'Create Staff Account' : 'Edit User' %></h1>
@@ -68,7 +60,3 @@
           </div>
         </form>
       </section>
-    </main>
-    <%- include('partials/footer') %>
-  </body>
-</html>

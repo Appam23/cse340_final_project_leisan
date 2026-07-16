@@ -9,3 +9,8 @@
 <link rel="stylesheet" href="/style/footer.css" />
 <link rel="stylesheet" href="/style/login.css" />
 <link rel="stylesheet" href="/style/admin.css?v=6" />
+<% if (typeof extraStyles !== 'undefined' && Array.isArray(extraStyles)) { %>
+	<% extraStyles.forEach((href) => { %>
+		<link rel="stylesheet" href="<%= href %>" />
+	<% }) %>
+<% } %>

@@ -1,14 +1,4 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <%- include('../partials/head') %>
-    <link rel="stylesheet" href="/style/inventory.css" />
-  </head>
-  <body>
-    <%- include('../partials/header') %>
-
-    <main class="page inventory-page">
-      <h1><%= heading || 'Inventory' %></h1>
+<h1><%= heading || 'Inventory' %></h1>
 
       <nav class="inventory-category-nav" aria-label="Browse categories">
         <a
@@ -42,13 +32,13 @@
         <a href="/inventory" class="inventory-clear-link">Clear</a>
       </form>
 
-      <% if (!vehicles || vehicles.length === 0) { %>
-        <p class="inventory-empty">Vehicles not found.</p>
-      <% } else { %>
-        <ul class="inventory-grid">
-          <% vehicles.forEach(v => { %>
-            <% const isFallbackCard = String(v.id || '').startsWith('fallback-'); %>
-            <li class="inventory-card">
+<% if (!vehicles || vehicles.length === 0) { %>
+  <p class="inventory-empty">Vehicles not found.</p>
+<% } else { %>
+  <ul class="inventory-grid">
+    <% vehicles.forEach(v => { %>
+      <% const isFallbackCard = String(v.id || '').startsWith('fallback-'); %>
+      <li class="inventory-card">
               <% if (isFallbackCard) { %>
                 <div class="inventory-card-link inventory-card-link-static">
                   <h3 class="inventory-card-title"><%= [v.year, v.make, v.model].filter(Boolean).join(' ') %></h3>
@@ -94,12 +84,7 @@
                   <span class="inventory-card-action">View Details</span>
                 </a>
               <% } %>
-            </li>
-          <% }) %>
-        </ul>
-      <% } %>
-    </main>
-
-    <%- include('../partials/footer') %>
-  </body>
-</html>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>

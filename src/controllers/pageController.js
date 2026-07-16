@@ -169,6 +169,7 @@ const buildInquiryViewModel = async (req, carId, overrides = {}) => {
 
   return {
     title: `${car.title} | Car Franchise`,
+    mainClass: 'detail-page',
     car,
     formData: {
       name: '',

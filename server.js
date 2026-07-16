@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import expressLayouts from 'express-ejs-layouts';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { setupMiddleware } from './src/middleware/index.js';
@@ -39,6 +40,8 @@ app.use(async (req, res, next) => {
 
 app.set('view engine', 'ejs');
 app.set('views', join(__dirname, 'src/views'));
+app.set('layout', 'layout');
+app.use(expressLayouts);
 
 app.get('/favicon.ico', (req, res) => {
   res.sendFile(join(__dirname, 'public/images/car.png'));
