@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main class="page">
+      <section class="auth-card admin-edit-card">
+        <p class="admin-edit-banner">Owner area</p>
+        <h1><%= mode === 'edit' ? 'Edit Category' : 'Add Category' %></h1>
+        <p>Define vehicle categories used for organizing inventory listings.</p>
+
+        <% if (error) { %>
+          <p class="auth-message auth-message-error"><%= error %></p>
+        <% } %>
+
+        <form class="auth-form" method="post" action="<%= mode === 'edit' ? `/admin/categories/${category.id}/edit` : '/admin/categories/new' %>">
+          <label>
+            Category Name
+            <input type="text" name="name" value="<%= formData.name || '' %>" required>
+          </label>
+
+          <label>
+            Description
+            <textarea name="description" rows="4" placeholder="Optional details about this category"><%= formData.description || '' %></textarea>
+          </label>
+
+          <div class="auth-actions">
+            <a class="site-auth-button" href="/admin/categories">Cancel</a>
+            <button type="submit" class="site-auth-button"><%= mode === 'edit' ? 'Save Category' : 'Create Category' %></button>
+          </div>
+        </form>
+      </section>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>

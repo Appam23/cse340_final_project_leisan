@@ -102,6 +102,23 @@ const fetchUnsplashImage = async (vehicle) => {
   return null;
 };
 
+export const getVehicleImageFromApi = async (vehicle) => {
+  const cacheKey = getCacheKey(vehicle);
+  const cachedUrl = readCache(cacheKey);
+
+  if (cachedUrl) {
+    return cachedUrl;
+  }
+
+  const onlineImageUrl = await fetchUnsplashImage(vehicle) || await fetchOpenverseImage(vehicle);
+
+  if (onlineImageUrl) {
+    writeCache(cacheKey, onlineImageUrl);
+  }
+
+  return onlineImageUrl;
+};
+
 const fetchOpenverseImage = async (vehicle) => {
   const cacheKey = getCacheKey(vehicle);
   const queries = getSearchQueries(vehicle);
@@ -138,21 +155,4 @@ const fetchOpenverseImage = async (vehicle) => {
   }
 
   return null;
-};
-
-export const getVehicleImageFromApi = async (vehicle) => {
-  const cacheKey = getCacheKey(vehicle);
-  const cachedUrl = readCache(cacheKey);
-
-  if (cachedUrl) {
-    return cachedUrl;
-  }
-
-  const onlineImageUrl = await fetchUnsplashImage(vehicle) || await fetchOpenverseImage(vehicle);
-
-  if (onlineImageUrl) {
-    writeCache(cacheKey, onlineImageUrl);
-  }
-
-  return onlineImageUrl;
 };

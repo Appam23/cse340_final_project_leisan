@@ -92,7 +92,7 @@ export const requireAdmin = (req, res, next) => {
     return res.redirect('/login');
   }
 
-  if (res.locals.currentUser.role !== 'admin') {
+  if (res.locals.currentUser.role !== 'owner') {
     return handle401(req, res);
   }
 
@@ -106,7 +106,7 @@ export const requireInventoryStaff = (req, res, next) => {
     return res.redirect('/login');
   }
 
-  if (!['user', 'employee', 'admin'].includes(res.locals.currentUser.role)) {
+  if (!['employee', 'owner'].includes(res.locals.currentUser.role)) {
     return handle401(req, res);
   }
 

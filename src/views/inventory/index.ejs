@@ -65,7 +65,7 @@
                       alt="<%= v.year %> <%= v.make %> <%= v.model %>"
                       class="inventory-card-image"
                       loading="lazy"
-                      onerror="this.onerror=null;this.src='/images/car.png';"
+                      data-fallback-src="/images/car.png"
                     />
                   <% } %>
 
@@ -87,7 +87,7 @@
                       alt="<%= v.year %> <%= v.make %> <%= v.model %>"
                       class="inventory-card-image"
                       loading="lazy"
-                      onerror="this.onerror=null;this.src='/images/car.png';"
+                      data-fallback-src="/images/car.png"
                     />
                   <% } %>
 

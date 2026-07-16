@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main class="page">
+      <section class="auth-card admin-panel">
+        <p class="admin-edit-banner">Staff area</p>
+        <h1>Review Moderation</h1>
+        <p class="lead admin-panel-copy">Delete reviews that violate policy or contain inappropriate content.</p>
+
+        <% if (messages && messages.success && messages.success.length) { %>
+          <% messages.success.forEach((message) => { %>
+            <p class="auth-message auth-message-success"><%= message %></p>
+          <% }) %>
+        <% } %>
+
+        <% if (messages && messages.error && messages.error.length) { %>
+          <% messages.error.forEach((message) => { %>
+            <p class="auth-message auth-message-error"><%= message %></p>
+          <% }) %>
+        <% } %>
+
+        <div class="admin-actions">
+          <a class="auth-button" href="/employee">Dashboard</a>
+          <a class="auth-button" href="/admin/service-requests">Service Requests</a>
+        </div>
+
+        <% if (!reviews || reviews.length === 0) { %>
+          <p class="admin-panel-copy">No reviews found.</p>
+        <% } else { %>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Vehicle</th>
+                  <th>Rating</th>
+                  <th>Review</th>
+                  <th>Submitted</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% reviews.forEach((review) => { %>
+                  <tr>
+                    <td data-label="Customer">
+                      <strong><%= review.user_name %></strong><br>
+                      <span><%= review.user_email %></span>
+                    </td>
+                    <td data-label="Vehicle"><%= review.vehicle_name || 'Unknown vehicle' %></td>
+                    <td data-label="Rating"><%= review.rating %>/5</td>
+                    <td data-label="Review"><%= review.comment || 'No comment provided.' %></td>
+                    <td data-label="Submitted"><%= review.created_at ? new Date(review.created_at).toLocaleString('en-US') : '' %></td>
+                    <td data-label="Actions">
+                      <form action="/admin/reviews/<%= review.id %>/delete" method="post" onsubmit="return confirm('Delete this review?');">
+                        <button type="submit" class="site-auth-button">Delete</button>
+                      </form>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </section>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>

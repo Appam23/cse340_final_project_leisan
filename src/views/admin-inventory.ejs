@@ -25,7 +25,7 @@
 
         <div class="admin-actions">
           <a class="auth-button" href="/admin/inventory/new">Add Vehicle</a>
-          <a class="auth-button" href="/admin">Dashboard</a>
+          <a class="auth-button" href="/employee">Dashboard</a>
         </div>
 
         <% if (vehicles.length === 0) { %>
@@ -51,13 +51,13 @@
                         src="<%= vehicle.image_url || '/images/car.png' %>"
                         alt="<%= [vehicle.year, vehicle.make, vehicle.model].filter(Boolean).join(' ') %>"
                         class="admin-inventory-thumb"
-                        onerror="this.onerror=null;this.src='/images/car.png';"
+                        data-fallback-src="/images/car.png"
                       />
                     </td>
                     <td data-label="Vehicle"><%= [vehicle.year, vehicle.make, vehicle.model].filter(Boolean).join(' ') %></td>
                     <td data-label="Category"><%= vehicle.category_name %></td>
                     <td data-label="Price"><%= new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(vehicle.price) %></td>
-                    <td data-label="Availability"><%= vehicle.is_available ? 'Available' : 'Unavailable' %></td>
+                    <td data-label="Availability"><%= vehicle.availability ? 'Available' : 'Unavailable' %></td>
                     <td data-label="Actions">
                       <div class="inventory-row-actions">
                         <a class="site-auth-button" href="/inventory/<%= vehicle.id %>">View</a>

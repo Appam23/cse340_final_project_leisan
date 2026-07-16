@@ -1,5 +1,8 @@
 // Controller = the brain that handles home page logic
 
+import { getCategories, getFeaturedVehicles } from '../models/inventoryModel.js';
+import { getVehicleImageFromApi } from '../services/vehicleImageService.js';
+
 const carApiUrl = 'https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json';
 const carImageApiUrl = 'https://api.openverse.org/v1/images/?q=car&per_page=20';
 
@@ -53,11 +56,98 @@ const buildCarCard = (image, index, prefix = 'car') => {
   };
 };
 
+const formatUsd = (value) => new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  maximumFractionDigits: 0,
+}).format(Number(value || 0));
+
+const categoryHref = (dbCategory) => `/inventory/type/${encodeURIComponent(dbCategory)}`;
+
+const resolveCategoryBrowseLinks = (categories) => {
+  const names = categories.map((category) => category.name);
+  const findMatch = (targets) => names.find((name) => targets.includes(name.toLowerCase()));
+
+  const truckMatch = findMatch(['trucks', 'truck']);
+  const vanMatch = findMatch(['vans', 'van']);
+  const carMatch = findMatch(['cars', 'car', 'sedan', 'sedans']);
+  const suvMatch = findMatch(['suvs', 'suv']);
+
+  return [
+    {
+      label: 'Trucks',
+      href: truckMatch ? categoryHref(truckMatch) : '/inventory',
+    },
+    {
+      label: 'Vans',
+      href: vanMatch ? categoryHref(vanMatch) : '/inventory',
+    },
+    {
+      label: 'Cars',
+      href: carMatch ? categoryHref(carMatch) : '/inventory',
+    },
+    {
+      label: 'SUVs',
+      href: suvMatch ? categoryHref(suvMatch) : '/inventory',
+    },
+  ];
+};
+
+const PLACEHOLDER_IMAGE = '/images/car.png';
+const ABSOLUTE_HTTP_URL = /^https?:\/\//i;
+
+const needsApiImage = (imageUrl) => {
+  if (!imageUrl) {
+    return true;
+  }
+
+  const value = String(imageUrl).trim();
+
+  if (!value || value === PLACEHOLDER_IMAGE) {
+    return true;
+  }
+
+  if (value.startsWith('/images/vehicles/') || value.startsWith('images/vehicles/')) {
+    return true;
+  }
+
+  if (ABSOLUTE_HTTP_URL.test(value)) {
+    return false;
+  }
+
+  if (value.startsWith('/')) {
+    return false;
+  }
+
+  return true;
+};
+
+const enrichFeaturedVehiclesWithImages = async (vehicles) => {
+  const enriched = [];
+
+  for (const vehicle of vehicles) {
+    if (!needsApiImage(vehicle.image_url)) {
+      enriched.push(vehicle);
+      continue;
+    }
+
+    const apiImageUrl = await getVehicleImageFromApi(vehicle);
+    enriched.push({
+      ...vehicle,
+      image_url: apiImageUrl || PLACEHOLDER_IMAGE,
+    });
+  }
+
+  return enriched;
+};
+
 export const getHome = async (req, res) => {
   try {
-    const [makeResponse, imageResponse] = await Promise.all([
+    const [makeResponse, imageResponse, featuredVehiclesRaw, categories] = await Promise.all([
       fetch(carApiUrl),
       fetch(carImageApiUrl),
+      getFeaturedVehicles(4),
+      getCategories(),
     ]);
 
     if (!makeResponse.ok) {
@@ -99,6 +189,14 @@ export const getHome = async (req, res) => {
 
     const featuredCar = buildCarCard(featuredImage, 0, 'featured');
     const galleryCars = pickRandomItems(carImages, 8).map((image, index) => buildCarCard(image, index + 1));
+    const featuredVehiclesWithImages = await enrichFeaturedVehiclesWithImages(featuredVehiclesRaw);
+    const featuredVehicles = featuredVehiclesWithImages.map((vehicle) => ({
+      ...vehicle,
+      title: [vehicle.year, vehicle.make, vehicle.model].filter(Boolean).join(' '),
+      priceLabel: formatUsd(vehicle.price),
+      detailHref: `/inventory/${vehicle.id}`,
+    }));
+    const browseCategories = resolveCategoryBrowseLinks(categories);
 
     req.session.carShowcase = [featuredCar, ...galleryCars];
 
@@ -110,9 +208,24 @@ export const getHome = async (req, res) => {
       carMakes: pickRandomItems(carMakes, 6),
       apiCount: makeData.Count ?? carMakes.length,
       apiMessage: makeData.Message ?? 'Live car data fetched from NHTSA.',
+      featuredVehicles,
+      browseCategories,
     });
   } catch (error) {
     console.error('Home API error:', error);
+
+    const [featuredVehiclesRaw, categories] = await Promise.all([
+      getFeaturedVehicles(4).catch(() => []),
+      getCategories().catch(() => []),
+    ]);
+    const featuredVehiclesWithImages = await enrichFeaturedVehiclesWithImages(featuredVehiclesRaw);
+    const featuredVehicles = featuredVehiclesWithImages.map((vehicle) => ({
+      ...vehicle,
+      title: [vehicle.year, vehicle.make, vehicle.model].filter(Boolean).join(' '),
+      priceLabel: formatUsd(vehicle.price),
+      detailHref: `/inventory/${vehicle.id}`,
+    }));
+    const browseCategories = resolveCategoryBrowseLinks(categories);
 
     res.render('home', {
       title: 'Car Franchise',
@@ -126,6 +239,8 @@ export const getHome = async (req, res) => {
       carMakes: [],
       apiCount: 0,
       apiMessage: 'The car API could not load right now.',
+      featuredVehicles,
+      browseCategories,
     });
   }
 };

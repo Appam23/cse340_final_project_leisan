@@ -7,21 +7,57 @@
     <%- include('partials/header') %>
     <main class="page">
       <section class="auth-card admin-dashboard-card">
-        <p class="admin-edit-banner">Staff area</p>
-        <h1>Management Dashboard</h1>
-        <p class="lead admin-dashboard-copy">Choose an area to continue.</p>
+        <p class="admin-edit-banner">Owner area</p>
+        <h1>Owner Dashboard</h1>
+        <p class="lead admin-dashboard-copy">Full administration access, including all employee tools and owner-only controls.</p>
 
         <div class="admin-dashboard-grid">
+          <a class="admin-dashboard-tile" href="/employee">
+            <span class="admin-dashboard-tile-label">Staff</span>
+            <strong>Employee Dashboard</strong>
+            <span>Open the same operational tools available to employees.</span>
+          </a>
+
+          <a class="admin-dashboard-tile" href="/admin/service-requests">
+            <span class="admin-dashboard-tile-label">Service</span>
+            <strong>Service Requests</strong>
+            <span>Review request history and update status.</span>
+          </a>
+
+          <a class="admin-dashboard-tile" href="/admin/reviews">
+            <span class="admin-dashboard-tile-label">Moderation</span>
+            <strong>Review Moderation</strong>
+            <span>Remove inappropriate reviews and keep listings clean.</span>
+          </a>
+
+          <a class="admin-dashboard-tile" href="/admin/contact-messages">
+            <span class="admin-dashboard-tile-label">Contact</span>
+            <strong>Contact Submissions</strong>
+            <span>Read and manage website contact form submissions.</span>
+          </a>
+
+          <a class="admin-dashboard-tile" href="/admin/categories">
+            <span class="admin-dashboard-tile-label">Categories</span>
+            <strong>Manage Categories</strong>
+            <span>Add, edit, and delete inventory categories.</span>
+          </a>
+
           <a class="admin-dashboard-tile" href="/admin/users">
             <span class="admin-dashboard-tile-label">Users</span>
-            <strong>Manage Accounts</strong>
-            <span>View, edit, and remove users.</span>
+            <strong>Manage Employee Accounts</strong>
+            <span>Create staff users and update account roles.</span>
           </a>
 
           <a class="admin-dashboard-tile" href="/admin/inventory">
             <span class="admin-dashboard-tile-label">Inventory</span>
             <strong>Manage Vehicles</strong>
-            <span>Add inventory items and prepare future edits.</span>
+            <span>Add, edit, and delete vehicles in inventory.</span>
+          </a>
+
+          <a class="admin-dashboard-tile" href="/admin/activity">
+            <span class="admin-dashboard-tile-label">Analytics</span>
+            <strong>System Activity</strong>
+            <span>View system-wide user data and recent activity.</span>
           </a>
         </div>
       </section>

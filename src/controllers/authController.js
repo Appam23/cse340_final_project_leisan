@@ -7,13 +7,13 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const normalizeEmail = (email) => email.trim().toLowerCase();
 const normalizeName = (value) => value.trim();
 
+const buildFullName = (firstName, middleName, lastName) => [firstName, middleName, lastName].filter(Boolean).join(' ');
+
 const signInUser = (req, user) => {
   req.session.user = {
     id: user.id,
     email: user.email,
-    firstName: user.first_name,
-    middleName: user.middle_name,
-    lastName: user.last_name,
+    name: user.name,
     role: user.role,
   };
 };
@@ -134,11 +134,12 @@ export const postRegister = async (req, res, next) => {
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
-    const role = process.env.ADMIN_EMAIL && email === process.env.ADMIN_EMAIL ? 'admin' : 'user';
+    const role = process.env.ADMIN_EMAIL && email === process.env.ADMIN_EMAIL ? 'owner' : 'customer';
     const user = await createUser({
       firstName,
       middleName: middleName || null,
       lastName,
+      name: buildFullName(firstName, middleName || null, lastName),
       email,
       passwordHash,
       role,
@@ -146,7 +147,7 @@ export const postRegister = async (req, res, next) => {
 
     signInUser(req, user);
 
-    req.flash('success', `Welcome, ${user.first_name}.`);
+    req.flash('success', `Welcome, ${user.name}.`);
     req.session.save(() => {
       redirectAfterAuth(req, res);
     });
@@ -200,8 +201,8 @@ export const postLogin = async (req, res, next) => {
       });
     }
 
-    if (process.env.ADMIN_EMAIL && user.email === process.env.ADMIN_EMAIL && user.role !== 'admin') {
-      const promotedUser = await updateUserRoleById(user.id, 'admin');
+    if (process.env.ADMIN_EMAIL && user.email === process.env.ADMIN_EMAIL && user.role !== 'owner') {
+      const promotedUser = await updateUserRoleById(user.id, 'owner');
 
       if (promotedUser) {
         user.role = promotedUser.role;
@@ -210,7 +211,7 @@ export const postLogin = async (req, res, next) => {
 
     signInUser(req, user);
 
-    req.flash('success', `Welcome back, ${user.first_name}!`);
+    req.flash('success', `Welcome back, ${user.name}!`);
     req.session.save(() => {
       redirectAfterAuth(req, res);
     });

@@ -157,6 +157,21 @@ export async function vehicleDetail(req, res, next) {
       inquirySuccess: null,
       inquiryError: null,
       formData: {},
+      reviewForm: {
+        rating: '',
+        comment: '',
+        editingReviewId: null,
+      },
+      reviewFieldErrors: {},
+      reviewError: null,
+      serviceForm: {
+        serviceType: '',
+        notes: '',
+      },
+      serviceFieldErrors: {},
+      serviceError: null,
+      serviceRequests: [],
+      reviews: [],
     });
   } catch (error) {
     next(error);

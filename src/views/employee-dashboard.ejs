@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main class="page">
+      <section class="auth-card admin-dashboard-card">
+        <p class="admin-edit-banner">Staff area</p>
+        <h1>Employee Dashboard</h1>
+        <p class="lead admin-dashboard-copy">Manage inventory, reviews, service requests, and contact submissions.</p>
+
+        <div class="admin-dashboard-grid">
+          <a class="admin-dashboard-tile" href="/admin/inventory">
+            <span class="admin-dashboard-tile-label">Inventory</span>
+            <strong>Edit Vehicle Details</strong>
+            <span>Update pricing, description, and availability for listed vehicles.</span>
+          </a>
+
+          <a class="admin-dashboard-tile" href="/admin/reviews">
+            <span class="admin-dashboard-tile-label">Moderation</span>
+            <strong>Moderate Reviews</strong>
+            <span>Review feedback and remove inappropriate or abusive comments.</span>
+          </a>
+
+          <a class="admin-dashboard-tile" href="/admin/service-requests">
+            <span class="admin-dashboard-tile-label">Service</span>
+            <strong>Manage Service Requests</strong>
+            <span>View requests, update status, and add internal notes.</span>
+          </a>
+
+          <a class="admin-dashboard-tile" href="/admin/contact-messages">
+            <span class="admin-dashboard-tile-label">Contact</span>
+            <strong>View Contact Submissions</strong>
+            <span>Read customer contact form submissions in one place.</span>
+          </a>
+
+          <% if (currentUser && currentUser.role === 'owner') { %>
+            <a class="admin-dashboard-tile" href="/admin/users">
+              <span class="admin-dashboard-tile-label">Admin</span>
+              <strong>Manage User Roles</strong>
+              <span>Create staff users and update customer or staff access roles.</span>
+            </a>
+          <% } %>
+        </div>
+      </section>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>

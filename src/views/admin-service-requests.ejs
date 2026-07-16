@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main class="page">
+      <section class="auth-card admin-panel">
+        <p class="eyebrow">Administration</p>
+        <h1>Service Requests</h1>
+        <p class="lead admin-panel-copy">Review customer service requests and update their status.</p>
+
+        <% if (messages && messages.success && messages.success.length) { %>
+          <% messages.success.forEach((message) => { %>
+            <p class="auth-message auth-message-success"><%= message %></p>
+          <% }) %>
+        <% } %>
+
+        <% if (messages && messages.error && messages.error.length) { %>
+          <% messages.error.forEach((message) => { %>
+            <p class="auth-message auth-message-error"><%= message %></p>
+          <% }) %>
+        <% } %>
+
+        <div class="admin-actions">
+          <a class="auth-button" href="/employee">Dashboard</a>
+          <a class="auth-button" href="/admin/inventory">Inventory</a>
+        </div>
+
+        <% if (!serviceRequests || serviceRequests.length === 0) { %>
+          <p class="admin-panel-copy">No service requests found.</p>
+        <% } else { %>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Vehicle</th>
+                  <th>Service</th>
+                  <th>Notes</th>
+                  <th>Status</th>
+                  <th>Submitted</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% serviceRequests.forEach((request) => { %>
+                  <tr>
+                    <td data-label="Customer">
+                      <strong><%= request.user_name %></strong><br>
+                      <span><%= request.user_email %></span>
+                    </td>
+                    <td data-label="Vehicle"><%= request.vehicle_name || 'Unassigned vehicle' %></td>
+                    <td data-label="Service"><%= request.service_type %></td>
+                    <td data-label="Notes"><%= request.notes || 'No notes provided.' %></td>
+                    <td data-label="Status">
+                      <span class="role-pill role-<%= request.status.toLowerCase().replace(/\s+/g, '-') %>"><%= request.status %></span>
+                    </td>
+                    <td data-label="Submitted"><%= request.submitted_at ? new Date(request.submitted_at).toLocaleString('en-US') : '' %></td>
+                    <td data-label="Actions">
+                      <form class="admin-service-status-form" action="/admin/service-requests/<%= request.id %>/status" method="post">
+                        <select name="status">
+                          <option value="Submitted" <%= request.status === 'Submitted' ? 'selected' : '' %>>Submitted</option>
+                          <option value="In Progress" <%= request.status === 'In Progress' ? 'selected' : '' %>>In Progress</option>
+                          <option value="Completed" <%= request.status === 'Completed' ? 'selected' : '' %>>Completed</option>
+                        </select>
+                        <input type="text" name="employeeNotes" placeholder="Internal note" value="<%= request.employee_notes || '' %>">
+                        <button type="submit" class="site-auth-button">Save</button>
+                      </form>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </section>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>

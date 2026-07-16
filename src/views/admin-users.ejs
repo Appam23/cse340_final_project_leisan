@@ -11,9 +11,21 @@
         <h1>Manage Users</h1>
         <p class="lead admin-panel-copy">Update account details, change roles, or remove users from the system.</p>
 
+        <div class="admin-filter-bar">
+          <a class="admin-filter-chip <%= !selectedRole ? 'is-active' : '' %>" href="/admin/users">All</a>
+          <a class="admin-filter-chip <%= selectedRole === 'customer' ? 'is-active' : '' %>" href="/admin/users?role=customer">Customers</a>
+          <a class="admin-filter-chip <%= selectedRole === 'employee' ? 'is-active' : '' %>" href="/admin/users?role=employee">Staff</a>
+          <a class="admin-filter-chip <%= selectedRole === 'owner' ? 'is-active' : '' %>" href="/admin/users?role=owner">Admins</a>
+        </div>
+
+        <div class="admin-actions">
+          <a class="auth-button" href="/admin/users/new">Create Staff Account</a>
+        </div>
+
         <% if (users.length === 0) { %>
           <p>No users found.</p>
         <% } else { %>
+          <p class="admin-panel-copy">Customers are regular users. Staff are employees. Admins are owners.</p>
           <div class="admin-table-wrap">
             <table class="admin-table">
               <thead>
@@ -21,19 +33,17 @@
                   <th>User</th>
                   <th>Email</th>
                   <th>Role</th>
-                  <th>Created</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 <% users.forEach((user) => { %>
                   <tr>
-                    <td data-label="User"><%= [user.first_name, user.last_name].filter(Boolean).join(' ') || user.email %></td>
+                    <td data-label="User"><%= user.name || user.email %></td>
                     <td data-label="Email"><%= user.email %></td>
                     <td data-label="Role">
-                      <span class="role-pill role-<%= user.role %>"><%= user.role %></span>
+                      <span class="role-pill role-<%= user.role %>"><%= user.displayRole %></span>
                     </td>
-                    <td data-label="Created"><%= new Date(user.created_at).toLocaleDateString() %></td>
                     <td data-label="Actions">
                       <div class="user-admin-actions">
                         <a class="site-auth-button" href="/admin/users/<%= user.id %>/edit">Edit</a>

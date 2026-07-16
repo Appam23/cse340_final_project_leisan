@@ -1,19 +1,44 @@
 import express from 'express';
 import * as inventoryController from '../src/controllers/inventoryController.js';
 import { getHome } from '../src/controllers/homeController.js';
-import { getAbout, getCarReview, getContact, postCarInquiry } from '../src/controllers/pageController.js';
+import {
+  getAbout,
+  getCarReview,
+  getContact,
+  postCarInquiry,
+  postContact,
+  postCreateReview,
+  postDeleteReview,
+  postEditReview,
+  postServiceRequest,
+} from '../src/controllers/pageController.js';
 import {
   getAdminDashboard,
+  getAdminActivity,
+  getAdminCategories,
+  getEditCategory,
+  getEmployeeDashboard,
   getAdminInventory,
+  getAdminServiceRequests,
+  getAdminReviews,
+  getAdminContactMessages,
   getAdminUsers,
+  getNewCategory,
+  getNewStaffUser,
   getEditUser,
   getNewInventoryVehicle,
   getEditInventoryVehicle,
+  postDeleteCategory,
   postDeleteUser,
+  postDeleteAdminReview,
+  postEditCategory,
   postEditUser,
   postDeleteInventoryVehicle,
+  postNewCategory,
   postNewInventoryVehicle,
   postEditInventoryVehicle,
+  postNewStaffUser,
+  postUpdateServiceRequestStatus,
 } from '../src/controllers/adminController.js';
 import {
   getLogin,
@@ -27,26 +52,46 @@ import { requireAdmin, requireAuth, requireGuest, requireInventoryStaff } from '
 const router = express.Router();
 
 router.get('/', getHome);
-router.get('/inventory', requireAuth, inventoryController.listVehicles);
-router.get('/inventory/type/:categoryName', requireAuth, inventoryController.categoryVehicles);
-router.get('/inventory/:id', requireAuth, inventoryController.vehicleDetail);
+router.get('/inventory', inventoryController.listVehicles);
+router.get('/inventory/type/:categoryName', inventoryController.categoryVehicles);
+router.get('/inventory/:id', inventoryController.vehicleDetail);
 router.get('/about', getAbout);
 router.get('/contact', getContact);
+router.post('/contact', postContact);
 router.get('/cars/:carId', getCarReview);
 router.post('/cars/:carId', postCarInquiry);
+router.post('/cars/:carId/reviews', requireAuth, postCreateReview);
+router.post('/cars/:carId/reviews/:reviewId/edit', requireAuth, postEditReview);
+router.post('/cars/:carId/reviews/:reviewId/delete', requireAuth, postDeleteReview);
+router.post('/cars/:carId/service-requests', requireAuth, postServiceRequest);
 router.get('/login', requireGuest, getLogin);
 router.post('/login', postLogin);
 router.get('/register', requireGuest, getRegister);
 router.post('/register', postRegister);
 router.post('/logout', postLogout);
 router.get('/admin', requireAdmin, getAdminDashboard);
+router.get('/admin/activity', requireAdmin, getAdminActivity);
+router.get('/admin/categories', requireAdmin, getAdminCategories);
+router.get('/admin/categories/new', requireAdmin, getNewCategory);
+router.post('/admin/categories/new', requireAdmin, postNewCategory);
+router.get('/admin/categories/:categoryId/edit', requireAdmin, getEditCategory);
+router.post('/admin/categories/:categoryId/edit', requireAdmin, postEditCategory);
+router.post('/admin/categories/:categoryId/delete', requireAdmin, postDeleteCategory);
+router.get('/employee', requireInventoryStaff, getEmployeeDashboard);
 router.get('/admin/inventory', requireInventoryStaff, getAdminInventory);
+router.get('/admin/service-requests', requireInventoryStaff, getAdminServiceRequests);
+router.post('/admin/service-requests/:requestId/status', requireInventoryStaff, postUpdateServiceRequestStatus);
+router.get('/admin/reviews', requireInventoryStaff, getAdminReviews);
+router.post('/admin/reviews/:reviewId/delete', requireInventoryStaff, postDeleteAdminReview);
+router.get('/admin/contact-messages', requireInventoryStaff, getAdminContactMessages);
 router.get('/admin/inventory/new', requireInventoryStaff, getNewInventoryVehicle);
 router.post('/admin/inventory/new', requireInventoryStaff, postNewInventoryVehicle);
 router.get('/admin/inventory/:vehicleId/edit', requireInventoryStaff, getEditInventoryVehicle);
 router.post('/admin/inventory/:vehicleId/edit', requireInventoryStaff, postEditInventoryVehicle);
 router.post('/admin/inventory/:vehicleId/delete', requireInventoryStaff, postDeleteInventoryVehicle);
 router.get('/admin/users', requireAdmin, getAdminUsers);
+router.get('/admin/users/new', requireAdmin, getNewStaffUser);
+router.post('/admin/users/new', requireAdmin, postNewStaffUser);
 router.get('/admin/users/:userId/edit', requireAdmin, getEditUser);
 router.post('/admin/users/:userId/edit', requireAdmin, postEditUser);
 router.post('/admin/users/:userId/delete', requireAdmin, postDeleteUser);

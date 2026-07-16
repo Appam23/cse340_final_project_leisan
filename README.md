@@ -37,7 +37,8 @@ This project presents a simple car dealership experience with public pages, acco
 - `src/middleware/` - shared middleware configuration
 - `src/views/` - EJS pages and partials
 - `public/` - CSS, images, and static assets
-- `sql/users.sql` - users table schema
+- `sql/01_core_schema.sql` - full database schema
+- `sql/users.sql` - users table schema for quick setup
 
 ## Requirements
 
@@ -57,10 +58,10 @@ This project presents a simple car dealership experience with public pages, acco
 
 3. Set your environment variables in a `.env` file.
 
-4. Initialize the users table:
+4. Initialize the database schema:
 
 	```bash
-	psql -d your_database_name -f sql/users.sql
+	psql -d your_database_name -f sql/01_core_schema.sql
 	```
 
 5. Start the app:
@@ -91,7 +92,8 @@ If `DATABASE_URL` is set, it is used first. Otherwise the app falls back to the 
 ## Database Notes
 
 - The app creates the `users` table automatically on startup if it does not exist.
-- The table schema is also documented in `sql/users.sql`.
+- The full schema is documented in `sql/01_core_schema.sql`.
+- A minimal users-only schema remains available in `sql/users.sql`.
 - Sessions are stored in PostgreSQL through `connect-pg-simple`.
 
 ## Scripts

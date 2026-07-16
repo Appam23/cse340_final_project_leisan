@@ -21,6 +21,8 @@ export async function getVehicles(search = '') {
         v.model,
         v.price,
         v.mileage,
+        v.description,
+        v.availability,
         ${vehicleImageSelect}
       FROM vehicles v
       LEFT JOIN vehicle_images vi
@@ -43,6 +45,8 @@ export async function getVehicles(search = '') {
       v.model,
       v.price,
       v.mileage,
+      v.description,
+      v.availability,
       ${vehicleImageSelect}
     FROM vehicles v
     LEFT JOIN vehicle_images vi
@@ -66,6 +70,71 @@ export async function getCategories() {
   return rows;
 }
 
+export async function getCategoryById(categoryId) {
+  const sql = `
+    SELECT id, name, description
+    FROM categories
+    WHERE id = $1
+    LIMIT 1
+  `;
+
+  const { rows } = await pool.query(sql, [categoryId]);
+  return rows[0] || null;
+}
+
+export async function getCategoriesWithVehicleCounts() {
+  const sql = `
+    SELECT
+      c.id,
+      c.name,
+      c.description,
+      COUNT(v.id)::int AS vehicle_count
+    FROM categories c
+    LEFT JOIN vehicles v
+      ON v.category_id = c.id
+    GROUP BY c.id, c.name, c.description
+    ORDER BY c.name ASC
+  `;
+
+  const { rows } = await pool.query(sql);
+  return rows;
+}
+
+export async function createCategory({ name, description }) {
+  const sql = `
+    INSERT INTO categories (name, description)
+    VALUES ($1, $2)
+    RETURNING id, name, description
+  `;
+
+  const { rows } = await pool.query(sql, [name, description || null]);
+  return rows[0] || null;
+}
+
+export async function updateCategoryById({ categoryId, name, description }) {
+  const sql = `
+    UPDATE categories
+    SET name = $1,
+        description = $2
+    WHERE id = $3
+    RETURNING id, name, description
+  `;
+
+  const { rows } = await pool.query(sql, [name, description || null, categoryId]);
+  return rows[0] || null;
+}
+
+export async function deleteCategoryById(categoryId) {
+  const sql = `
+    DELETE FROM categories
+    WHERE id = $1
+    RETURNING id
+  `;
+
+  const { rows } = await pool.query(sql, [categoryId]);
+  return rows[0] || null;
+}
+
 export async function getVehiclesByCategory(categoryName) {
   const sql = `
     SELECT
@@ -75,6 +144,8 @@ export async function getVehiclesByCategory(categoryName) {
       v.model,
       v.price,
       v.mileage,
+      v.description,
+      v.availability,
       c.name AS category_name,
       ${vehicleImageSelect}
     FROM vehicles v
@@ -95,14 +166,14 @@ export async function getAllVehicles() {
   const sql = `
     SELECT
       v.id,
+      v.category_id,
       v.year,
       v.make,
       v.model,
-      v.trim,
       v.price,
       v.mileage,
-      v.is_available,
-      v.featured,
+      v.description,
+      v.availability,
       c.name AS category_name,
       ${vehicleImageSelect}
     FROM vehicles v
@@ -111,10 +182,38 @@ export async function getAllVehicles() {
     LEFT JOIN vehicle_images vi
       ON vi.vehicle_id = v.id
      AND vi.is_primary = true
-    ORDER BY v.created_at DESC, v.id DESC
+    ORDER BY v.id DESC
   `;
 
   const { rows } = await pool.query(sql);
+  return rows;
+}
+
+export async function getFeaturedVehicles(limit = 4) {
+  const sql = `
+    SELECT
+      v.id,
+      v.year,
+      v.make,
+      v.model,
+      v.price,
+      v.mileage,
+      v.description,
+      v.availability,
+      c.name AS category_name,
+      ${vehicleImageSelect}
+    FROM vehicles v
+    INNER JOIN categories c
+      ON c.id = v.category_id
+    LEFT JOIN vehicle_images vi
+      ON vi.vehicle_id = v.id
+     AND vi.is_primary = true
+    WHERE v.availability = TRUE
+    ORDER BY v.id DESC
+    LIMIT $1
+  `;
+
+  const { rows } = await pool.query(sql, [limit]);
   return rows;
 }
 
@@ -127,44 +226,28 @@ export async function createVehicle(vehicleData) {
     const insertVehicleSql = `
       INSERT INTO vehicles (
         category_id,
-        year,
         make,
         model,
-        trim,
-        mileage,
-        vin,
-        color,
-        transmission,
-        fuel_type,
-        drivetrain,
-        engine,
-        description,
+        year,
         price,
-        is_available,
-        featured
+        mileage,
+        description,
+        availability
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16
+        $1, $2, $3, $4, $5, $6, $7, $8
       )
       RETURNING id
     `;
 
     const vehicleValues = [
       vehicleData.categoryId,
-      vehicleData.year,
       vehicleData.make,
       vehicleData.model,
-      vehicleData.trim || null,
-      vehicleData.mileage,
-      vehicleData.vin || null,
-      vehicleData.color || null,
-      vehicleData.transmission || null,
-      vehicleData.fuelType || null,
-      vehicleData.drivetrain || null,
-      vehicleData.engine || null,
-      vehicleData.description || null,
+      vehicleData.year,
       vehicleData.price,
-      vehicleData.isAvailable,
-      vehicleData.featured,
+      vehicleData.mileage,
+      vehicleData.description || null,
+      vehicleData.availability,
     ];
 
     const insertedVehicle = await client.query(insertVehicleSql, vehicleValues);
@@ -175,16 +258,13 @@ export async function createVehicle(vehicleData) {
         INSERT INTO vehicle_images (
           vehicle_id,
           image_url,
-          alt_text,
-          sort_order,
           is_primary
-        ) VALUES ($1, $2, $3, 0, true)
+        ) VALUES ($1, $2, true)
       `;
 
       await client.query(insertImageSql, [
         vehicleId,
         vehicleData.imageUrl,
-        vehicleData.altText || `${vehicleData.year} ${vehicleData.make} ${vehicleData.model}`,
       ]);
     }
 
@@ -208,43 +288,26 @@ export async function updateVehicleById(vehicleId, vehicleData) {
       UPDATE vehicles
       SET
         category_id = $1,
-        year = $2,
-        make = $3,
-        model = $4,
-        trim = $5,
+        make = $2,
+        model = $3,
+        year = $4,
+        price = $5,
         mileage = $6,
-        vin = $7,
-        color = $8,
-        transmission = $9,
-        fuel_type = $10,
-        drivetrain = $11,
-        engine = $12,
-        description = $13,
-        price = $14,
-        is_available = $15,
-        featured = $16,
-        updated_at = CURRENT_TIMESTAMP
-      WHERE id = $17
+        description = $7,
+        availability = $8
+      WHERE id = $9
       RETURNING id
     `;
 
     const updateValues = [
       vehicleData.categoryId,
-      vehicleData.year,
       vehicleData.make,
       vehicleData.model,
-      vehicleData.trim || null,
-      vehicleData.mileage,
-      vehicleData.vin || null,
-      vehicleData.color || null,
-      vehicleData.transmission || null,
-      vehicleData.fuelType || null,
-      vehicleData.drivetrain || null,
-      vehicleData.engine || null,
-      vehicleData.description || null,
+      vehicleData.year,
       vehicleData.price,
-      vehicleData.isAvailable,
-      vehicleData.featured,
+      vehicleData.mileage,
+      vehicleData.description || null,
+      vehicleData.availability,
       vehicleId,
     ];
 
@@ -262,16 +325,13 @@ export async function updateVehicleById(vehicleId, vehicleData) {
         INSERT INTO vehicle_images (
           vehicle_id,
           image_url,
-          alt_text,
-          sort_order,
           is_primary
-        ) VALUES ($1, $2, $3, 0, true)
+        ) VALUES ($1, $2, true)
       `;
 
       await client.query(insertImageSql, [
         vehicleId,
         vehicleData.imageUrl,
-        vehicleData.altText || `${vehicleData.year} ${vehicleData.make} ${vehicleData.model}`,
       ]);
     }
 
@@ -309,20 +369,11 @@ export async function getVehicleById(id) {
       v.year,
       v.make,
       v.model,
-      v.trim,
       v.price,
       v.mileage,
-      v.vin,
-      v.color,
-      v.transmission,
-      v.fuel_type,
-      v.drivetrain,
-      v.engine,
       v.description,
-      v.is_available,
-      v.featured,
+      v.availability,
       vi.image_url AS raw_image_url,
-      vi.alt_text AS raw_alt_text,
       ${vehicleImageSelect}
     FROM vehicles v
     LEFT JOIN vehicle_images vi

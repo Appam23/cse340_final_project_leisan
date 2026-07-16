@@ -155,6 +155,33 @@
   margin-bottom: 0;
 }
 
+.admin-filter-bar {
+  margin-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 208, 191, 0.24);
+  background: rgba(7, 12, 18, 0.92);
+  color: #c7d0d8;
+  text-decoration: none;
+  font: 700 0.82rem/1 Arial, Helvetica, sans-serif;
+  transition: border-color 120ms ease, background 120ms ease, color 120ms ease;
+}
+
+.admin-filter-chip:hover,
+.admin-filter-chip.is-active {
+  border-color: rgba(255, 92, 42, 0.7);
+  background: rgba(255, 92, 42, 0.16);
+  color: #ffe5dc;
+}
+
 .admin-dashboard-card {
   width: min(100%, 920px);
   padding: 40px;
@@ -289,6 +316,17 @@
   background: rgba(201, 106, 43, 0.16);
 }
 
+.role-owner {
+  color: #f6c37b;
+  background: rgba(201, 106, 43, 0.16);
+}
+
+.role-employee {
+  color: #9dd7ff;
+  background: rgba(77, 144, 255, 0.14);
+}
+
+.role-customer,
 .role-user {
   color: #9dd7ff;
   background: rgba(77, 144, 255, 0.14);

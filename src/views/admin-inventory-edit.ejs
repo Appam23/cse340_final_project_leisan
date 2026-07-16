@@ -42,43 +42,8 @@
           </label>
 
           <label>
-            Trim
-            <input type="text" name="trim" value="<%= formData.trim || '' %>">
-          </label>
-
-          <label>
             Mileage
             <input type="number" name="mileage" min="0" value="<%= formData.mileage || '' %>" required>
-          </label>
-
-          <label>
-            VIN
-            <input type="text" name="vin" maxlength="17" value="<%= formData.vin || '' %>">
-          </label>
-
-          <label>
-            Color
-            <input type="text" name="color" value="<%= formData.color || '' %>">
-          </label>
-
-          <label>
-            Transmission
-            <input type="text" name="transmission" value="<%= formData.transmission || '' %>">
-          </label>
-
-          <label>
-            Fuel Type
-            <input type="text" name="fuelType" value="<%= formData.fuelType || '' %>">
-          </label>
-
-          <label>
-            Drivetrain
-            <input type="text" name="drivetrain" value="<%= formData.drivetrain || '' %>">
-          </label>
-
-          <label>
-            Engine
-            <input type="text" name="engine" value="<%= formData.engine || '' %>">
           </label>
 
           <label>
@@ -94,18 +59,13 @@
           <label>
             Image URL
             <input
-              type="url"
+              type="text"
               name="imageUrl"
               id="edit-image-url-input"
               value="<%= formData.imageUrl || '' %>"
-              placeholder="https://example.com/car.jpg"
+              placeholder="https://example.com/car.jpg or /images/car.png"
             >
-            <small class="field-help">Use a direct image link, not a webpage link.</small>
-          </label>
-
-          <label>
-            Image Alt Text
-            <input type="text" name="altText" value="<%= formData.altText || '' %>">
+            <small class="field-help">Use a direct image link or a site-relative path like /images/car.png.</small>
           </label>
 
           <div class="admin-image-preview-wrap">
@@ -120,17 +80,9 @@
 
           <label>
             <span>Availability</span>
-            <select name="isAvailable">
-              <option value="on" <%= formData.isAvailable !== false ? 'selected' : '' %>>Available</option>
-              <option value="off" <%= formData.isAvailable === false ? 'selected' : '' %>>Unavailable</option>
-            </select>
-          </label>
-
-          <label>
-            <span>Featured</span>
-            <select name="featured">
-              <option value="off" <%= formData.featured !== true ? 'selected' : '' %>>No</option>
-              <option value="on" <%= formData.featured === true ? 'selected' : '' %>>Yes</option>
+            <select name="availability">
+              <option value="on" <%= formData.availability !== false ? 'selected' : '' %>>Available</option>
+              <option value="off" <%= formData.availability === false ? 'selected' : '' %>>Unavailable</option>
             </select>
           </label>
 
@@ -142,24 +94,6 @@
       </section>
     </main>
     <%- include('partials/footer') %>
-    <script>
-      (() => {
-        const input = document.getElementById('edit-image-url-input');
-        const preview = document.getElementById('edit-admin-image-preview');
-
-        if (!input || !preview) {
-          return;
-        }
-
-        input.addEventListener('input', () => {
-          const value = input.value.trim();
-          preview.src = value || '/images/car.png';
-        });
-
-        preview.addEventListener('error', () => {
-          preview.src = '/images/car.png';
-        });
-      })();
-    </script>
+    <script src="/admin-inventory-preview.js" defer></script>
   </body>
 </html>

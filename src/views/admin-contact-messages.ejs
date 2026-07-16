@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main class="page">
+      <section class="auth-card admin-panel">
+        <p class="admin-edit-banner">Staff area</p>
+        <h1>Contact Submissions</h1>
+        <p class="lead admin-panel-copy">View all website contact form submissions from customers and visitors.</p>
+
+        <div class="admin-actions">
+          <a class="auth-button" href="/employee">Dashboard</a>
+          <a class="auth-button" href="/admin/service-requests">Service Requests</a>
+        </div>
+
+        <% if (!contactMessages || contactMessages.length === 0) { %>
+          <p class="admin-panel-copy">No contact submissions found.</p>
+        <% } else { %>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Subject</th>
+                  <th>Message</th>
+                  <th>Rating</th>
+                  <th>Submitted</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% contactMessages.forEach((entry) => { %>
+                  <tr>
+                    <td data-label="Name"><%= entry.name %></td>
+                    <td data-label="Email"><%= entry.email %></td>
+                    <td data-label="Phone"><%= entry.phone || 'N/A' %></td>
+                    <td data-label="Subject"><%= entry.subject || 'General' %></td>
+                    <td data-label="Message"><%= entry.message %></td>
+                    <td data-label="Rating"><%= entry.rating ?? 'N/A' %></td>
+                    <td data-label="Submitted"><%= entry.created_at ? new Date(entry.created_at).toLocaleString('en-US') : '' %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </section>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>

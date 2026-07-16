@@ -8,44 +8,62 @@
     <main class="page">
       <section class="auth-card admin-edit-card">
         <p class="admin-edit-banner">Admin only</p>
-        <h1>Edit User</h1>
-        <p>Update this account's details and role.</p>
+        <h1><%= mode === 'create' ? 'Create Staff Account' : 'Edit User' %></h1>
+        <p><%= mode === 'create' ? 'Create an employee account for staff access.' : "Update this account's details and role." %></p>
 
         <% if (error) { %>
           <p class="auth-message auth-message-error"><%= error %></p>
         <% } %>
 
-        <form action="/admin/users/<%= user.id %>/edit" method="post" class="auth-form">
+        <form action="<%= mode === 'create' ? '/admin/users/new' : '/admin/users/' + user.id + '/edit' %>" method="post" class="auth-form">
           <label>
             First Name
-            <input type="text" name="firstName" value="<%= user.first_name || '' %>" required>
+            <input type="text" name="firstName" value="<%= formData.firstName || '' %>" required>
           </label>
 
           <label>
             Middle Name
-            <input type="text" name="middleName" value="<%= user.middle_name || '' %>">
+            <input type="text" name="middleName" value="<%= formData.middleName || '' %>">
           </label>
 
           <label>
             Last Name
-            <input type="text" name="lastName" value="<%= user.last_name || '' %>" required>
+            <input type="text" name="lastName" value="<%= formData.lastName || '' %>" required>
           </label>
 
           <label>
             Email
-            <input type="email" name="email" value="<%= user.email || '' %>" required>
+            <input type="email" name="email" value="<%= formData.email || '' %>" required>
           </label>
 
-          <label>
-            Role
-            <select name="role">
-              <option value="user" <%= user.role === 'user' ? 'selected' : '' %>>User</option>
-              <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
-            </select>
-          </label>
+          <% if (mode === 'create') { %>
+            <label>
+              Password
+              <input type="password" name="password" value="<%= formData.password || '' %>" required>
+            </label>
+
+            <label>
+              Confirm Password
+              <input type="password" name="confirmPassword" value="<%= formData.confirmPassword || '' %>" required>
+            </label>
+
+            <label>
+              Role
+              <input type="text" name="role" value="Employee" readonly>
+            </label>
+          <% } else { %>
+            <label>
+              Role
+              <select name="role">
+                <option value="customer" <%= formData.role === 'customer' ? 'selected' : '' %>>Customer</option>
+                <option value="employee" <%= formData.role === 'employee' ? 'selected' : '' %>>Employee</option>
+                <option value="owner" <%= formData.role === 'owner' ? 'selected' : '' %>>Owner</option>
+              </select>
+            </label>
+          <% } %>
 
           <div class="auth-actions">
-            <button type="submit" class="site-auth-button">Save Changes</button>
+            <button type="submit" class="site-auth-button"><%= mode === 'create' ? 'Create Staff Account' : 'Save Changes' %></button>
             <a class="site-auth-button" href="/admin/users">Cancel</a>
           </div>
         </form>

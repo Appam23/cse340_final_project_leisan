@@ -13,9 +13,12 @@
     <% if (currentUser) { %>
       <span class="site-user">
         Signed in as
-        <%= [currentUser.first_name, currentUser.last_name].filter(Boolean).join(' ') || currentUser.email %>
+        <%= currentUser.name || currentUser.email %>
       </span>
-      <% if (currentUser.role === 'admin') { %>
+      <% if (['employee', 'owner'].includes(currentUser.role)) { %>
+        <a href="/employee">Employee Dashboard</a>
+      <% } %>
+      <% if (currentUser.role === 'owner') { %>
         <a href="/admin">Admin</a>
       <% } %>
       <form class="site-auth-form" action="/logout" method="post">

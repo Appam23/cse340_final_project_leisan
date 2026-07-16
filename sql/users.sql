@@ -1,11 +1,9 @@
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
-  first_name VARCHAR(100) NOT NULL,
-  middle_name VARCHAR(100),
-  last_name VARCHAR(100) NOT NULL,
+  name VARCHAR(150) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
   password_hash TEXT NOT NULL,
-  role VARCHAR(20) NOT NULL DEFAULT 'user',
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  role VARCHAR(20) NOT NULL DEFAULT 'customer'
+    CHECK (role IN ('customer', 'employee', 'owner'))
 );
 

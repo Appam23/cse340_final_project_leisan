@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main class="page">
+      <section class="auth-card admin-panel">
+        <p class="admin-edit-banner">Owner area</p>
+        <h1>Manage Categories</h1>
+        <p class="lead admin-panel-copy">Add, edit, or delete inventory categories used by vehicle records.</p>
+
+        <div class="admin-actions">
+          <a class="auth-button" href="/admin/categories/new">Add Category</a>
+          <a class="auth-button" href="/admin">Owner Dashboard</a>
+        </div>
+
+        <% if (!categories || categories.length === 0) { %>
+          <p class="admin-panel-copy">No categories found.</p>
+        <% } else { %>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Vehicles</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% categories.forEach((category) => { %>
+                  <tr>
+                    <td data-label="Name"><%= category.name %></td>
+                    <td data-label="Description"><%= category.description || 'No description' %></td>
+                    <td data-label="Vehicles"><%= category.vehicle_count %></td>
+                    <td data-label="Actions">
+                      <div class="inventory-row-actions">
+                        <a class="site-auth-button" href="/admin/categories/<%= category.id %>/edit">Edit</a>
+                        <form action="/admin/categories/<%= category.id %>/delete" method="post" onsubmit="return confirm('Delete this category?');">
+                          <button type="submit" class="site-auth-button">Delete</button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </section>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>

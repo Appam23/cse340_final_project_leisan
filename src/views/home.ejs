@@ -13,7 +13,41 @@
       <h1>Car Dealership</h1>
       <p class="lead">Welcome to our car dealership website. Built with Node.js, Express, EJS, and PostgreSQL.</p>
 
-      <% if (currentUser && currentUser.role === 'admin') { %>
+      <section class="home-browse-categories" aria-labelledby="browse-categories-heading">
+        <p class="api-kicker">Browse by Category</p>
+        <h2 id="browse-categories-heading">Shop by Body Style</h2>
+        <div class="home-category-grid">
+          <% (browseCategories || []).forEach((category) => { %>
+            <a class="home-category-link" href="<%= category.href %>"><%= category.label %></a>
+          <% }) %>
+        </div>
+      </section>
+
+      <section class="home-featured-vehicles" aria-labelledby="featured-vehicles-heading">
+        <p class="api-kicker">Featured Vehicles</p>
+        <h2 id="featured-vehicles-heading">Latest Available Inventory</h2>
+        <% if (featuredVehicles && featuredVehicles.length) { %>
+          <div class="home-featured-grid">
+            <% featuredVehicles.forEach((vehicle) => { %>
+              <a class="home-featured-card" href="<%= vehicle.detailHref %>">
+                <img
+                  class="home-featured-image"
+                  src="<%= vehicle.image_url || '/images/car.png' %>"
+                  alt="<%= vehicle.title %>"
+                  data-fallback-src="/images/car.png"
+                />
+                <h3><%= vehicle.title %></h3>
+                <p><%= vehicle.priceLabel %></p>
+                <span>View details</span>
+              </a>
+            <% }) %>
+          </div>
+        <% } else { %>
+          <p class="api-meta">Featured vehicles will appear here as inventory is added.</p>
+        <% } %>
+      </section>
+
+      <% if (currentUser && currentUser.role === 'owner') { %>
         <section class="form-card admin-tools" aria-labelledby="admin-tools-heading">
           <p class="api-kicker">Admin Tools</p>
           <h2 id="admin-tools-heading">Manage Users</h2>

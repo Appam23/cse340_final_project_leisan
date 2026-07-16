@@ -9,6 +9,55 @@
       <p class="eyebrow">Contact Us</p>
       <h1>Get in Touch</h1>
       <p class="lead">Email us or visit the dealership to learn more about our vehicles and services.</p>
+
+      <% if (contactSuccess) { %>
+        <p class="auth-message auth-message-success"><%= contactSuccess %></p>
+      <% } %>
+
+      <% if (contactError) { %>
+        <p class="auth-message auth-message-error"><%= contactError %></p>
+      <% } %>
+
+      <section class="auth-card admin-edit-card" aria-labelledby="contact-form-heading">
+        <h2 id="contact-form-heading">Send a Message</h2>
+        <form action="/contact" method="post" class="auth-form">
+          <label>
+            Name
+            <input type="text" name="name" value="<%= formData.name || '' %>" required>
+            <% if (fieldErrors && fieldErrors.name) { %>
+              <span class="field-error"><%= fieldErrors.name %></span>
+            <% } %>
+          </label>
+
+          <label>
+            Email
+            <input type="email" name="email" value="<%= formData.email || '' %>" required>
+            <% if (fieldErrors && fieldErrors.email) { %>
+              <span class="field-error"><%= fieldErrors.email %></span>
+            <% } %>
+          </label>
+
+          <label>
+            Subject
+            <input type="text" name="subject" value="<%= formData.subject || '' %>" required>
+            <% if (fieldErrors && fieldErrors.subject) { %>
+              <span class="field-error"><%= fieldErrors.subject %></span>
+            <% } %>
+          </label>
+
+          <label>
+            Message
+            <textarea name="message" rows="5" required><%= formData.message || '' %></textarea>
+            <% if (fieldErrors && fieldErrors.message) { %>
+              <span class="field-error"><%= fieldErrors.message %></span>
+            <% } %>
+          </label>
+
+          <div class="auth-actions">
+            <button type="submit" class="site-auth-button">Send Message</button>
+          </div>
+        </form>
+      </section>
       
       <section class="contact-info">
         <h2>Contact Information</h2>

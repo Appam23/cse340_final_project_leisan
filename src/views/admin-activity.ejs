@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main class="page">
+      <section class="auth-card admin-panel">
+        <p class="admin-edit-banner">Owner area</p>
+        <h1>System Activity</h1>
+        <p class="lead admin-panel-copy">Overview of user data and recent platform activity across all major workflows.</p>
+
+        <div class="admin-actions">
+          <a class="auth-button" href="/admin">Owner Dashboard</a>
+          <a class="auth-button" href="/admin/users">Manage Users</a>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td data-label="Metric">Total users</td><td data-label="Count"><%= summary.users_total %></td></tr>
+              <tr><td data-label="Metric">Owners</td><td data-label="Count"><%= summary.owners_total %></td></tr>
+              <tr><td data-label="Metric">Employees</td><td data-label="Count"><%= summary.employees_total %></td></tr>
+              <tr><td data-label="Metric">Customers</td><td data-label="Count"><%= summary.customers_total %></td></tr>
+              <tr><td data-label="Metric">Categories</td><td data-label="Count"><%= summary.categories_total %></td></tr>
+              <tr><td data-label="Metric">Vehicles</td><td data-label="Count"><%= summary.vehicles_total %></td></tr>
+              <tr><td data-label="Metric">Reviews</td><td data-label="Count"><%= summary.reviews_total %></td></tr>
+              <tr><td data-label="Metric">Service requests</td><td data-label="Count"><%= summary.service_requests_total %></td></tr>
+              <tr><td data-label="Metric">Contact messages</td><td data-label="Count"><%= summary.contact_messages_total %></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 class="admin-activity-title">Recent Users</h2>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (!recentUsers || recentUsers.length === 0) { %>
+                <tr><td colspan="3">No users found.</td></tr>
+              <% } else { %>
+                <% recentUsers.forEach((user) => { %>
+                  <tr>
+                    <td data-label="Name"><%= user.name || 'N/A' %></td>
+                    <td data-label="Email"><%= user.email %></td>
+                    <td data-label="Role"><%= user.role %></td>
+                  </tr>
+                <% }) %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 class="admin-activity-title">Recent Service Requests</h2>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Vehicle</th>
+                <th>Service</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (!recentServiceRequests || recentServiceRequests.length === 0) { %>
+                <tr><td colspan="4">No service requests found.</td></tr>
+              <% } else { %>
+                <% recentServiceRequests.forEach((request) => { %>
+                  <tr>
+                    <td data-label="Customer"><%= request.user_name || 'N/A' %></td>
+                    <td data-label="Vehicle"><%= request.vehicle_name || 'Unassigned vehicle' %></td>
+                    <td data-label="Service"><%= request.service_type %></td>
+                    <td data-label="Status"><%= request.status %></td>
+                  </tr>
+                <% }) %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 class="admin-activity-title">Recent Reviews</h2>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Vehicle</th>
+                <th>Rating</th>
+                <th>Comment</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (!recentReviews || recentReviews.length === 0) { %>
+                <tr><td colspan="4">No reviews found.</td></tr>
+              <% } else { %>
+                <% recentReviews.forEach((review) => { %>
+                  <tr>
+                    <td data-label="Customer"><%= review.user_name || 'N/A' %></td>
+                    <td data-label="Vehicle"><%= review.vehicle_name || 'Unknown vehicle' %></td>
+                    <td data-label="Rating"><%= review.rating %>/5</td>
+                    <td data-label="Comment"><%= review.comment || 'No comment provided.' %></td>
+                  </tr>
+                <% }) %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 class="admin-activity-title">Recent Contact Messages</h2>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Subject</th>
+                <th>Submitted</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (!recentContactMessages || recentContactMessages.length === 0) { %>
+                <tr><td colspan="4">No contact messages found.</td></tr>
+              <% } else { %>
+                <% recentContactMessages.forEach((entry) => { %>
+                  <tr>
+                    <td data-label="Name"><%= entry.name %></td>
+                    <td data-label="Email"><%= entry.email %></td>
+                    <td data-label="Subject"><%= entry.subject || 'General' %></td>
+                    <td data-label="Submitted"><%= entry.created_at ? new Date(entry.created_at).toLocaleString('en-US') : '' %></td>
+                  </tr>
+                <% }) %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>

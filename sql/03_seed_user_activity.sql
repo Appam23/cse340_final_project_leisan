@@ -6,17 +6,16 @@
 
 -- ---------------------------------------------------------
 -- REVIEWS
--- one review per (user, vehicle) due to ux_review_user_vehicle
 -- ---------------------------------------------------------
-INSERT INTO reviews (user_id, vehicle_id, rating, title, body, is_approved, created_at, updated_at)
-SELECT u.id, v.id, r.rating, r.title, r.body, true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+INSERT INTO reviews (user_id, vehicle_id, rating, comment, created_at, updated_at)
+SELECT u.id, v.id, r.rating, r.comment, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 FROM (
   VALUES
-    ('lei21014@byui.edu',  'Toyota',        'RAV4',      5, 'Great daily SUV', 'Very reliable and comfortable for commuting.'),
-    ('angie@gmail.com',    'Honda',         'Accord',    4, 'Solid sedan',     'Fuel efficient and smooth ride.'),
-    ('trazhgim@gmail.com', 'Ford',          'F-150',     5, 'Workhorse truck', 'Excellent towing and cabin space.'),
-    ('lei21014@byui.edu',  'Chrysler',      'Pacifica',  4, 'Family friendly', 'Plenty of room and practical features.')
-) AS r(email, make, model, rating, title, body)
+    ('lei21014@byui.edu',  'Toyota',        'RAV4',      5, 'Very reliable and comfortable for commuting.'),
+    ('angie@gmail.com',    'Honda',         'Accord',    4, 'Fuel efficient and smooth ride.'),
+    ('trazhgim@gmail.com', 'Ford',          'F-150',     5, 'Excellent towing and cabin space.'),
+    ('lei21014@byui.edu',  'Chrysler',      'Pacifica',  4, 'Plenty of room and practical features.')
+) AS r(email, make, model, rating, comment)
 JOIN users u
   ON u.email = r.email
 JOIN vehicles v
@@ -32,15 +31,15 @@ WHERE NOT EXISTS (
 -- ---------------------------------------------------------
 -- SERVICE REQUESTS
 -- ---------------------------------------------------------
-INSERT INTO service_requests (user_id, vehicle_id, request_type, description, status, submitted_at, updated_at)
-SELECT u.id, v.id, s.request_type, s.description, s.status, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+INSERT INTO service_requests (user_id, vehicle_id, service_type, notes, status, employee_notes, created_at, updated_at)
+SELECT u.id, v.id, s.service_type, s.notes, s.status, s.employee_notes, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 FROM (
   VALUES
-    ('lei21014@byui.edu',  'Toyota',   'RAV4',     'oil_change',   'Need synthetic oil change before road trip.', 'submitted'),
-    ('angie@gmail.com',    'Honda',    'Accord',   'inspection',   'Pre-purchase inspection request.',             'in_progress'),
-    ('trazhgim@gmail.com', 'Ford',     'F-150',    'brake_service','Brake pads making noise.',                     'submitted'),
-    ('lei21014@byui.edu',  'Chrysler', 'Pacifica', 'tire_rotation','Rotate all four tires.',                       'completed')
-) AS s(email, make, model, request_type, description, status)
+    ('lei21014@byui.edu',  'Toyota',   'RAV4',     'Oil change',   'Need synthetic oil change before road trip.', 'Submitted',   NULL),
+    ('angie@gmail.com',    'Honda',    'Accord',   'Inspection',   'Pre-purchase inspection request.',             'In Progress', NULL),
+    ('trazhgim@gmail.com', 'Ford',     'F-150',    'Brake service','Brake pads making noise.',                     'Submitted',   NULL),
+    ('lei21014@byui.edu',  'Chrysler', 'Pacifica', 'Tire rotation','Rotate all four tires.',                       'Completed',   NULL)
+) AS s(email, make, model, service_type, notes, status, employee_notes)
 JOIN users u
   ON u.email = s.email
 JOIN vehicles v
@@ -51,21 +50,20 @@ WHERE NOT EXISTS (
   FROM service_requests x
   WHERE x.user_id = u.id
     AND x.vehicle_id = v.id
-    AND x.request_type = s.request_type
+    AND x.service_type = s.service_type
 );
 
 -- ---------------------------------------------------------
 -- CONTACT MESSAGES
--- includes one guest message (user_id NULL)
 -- ---------------------------------------------------------
-INSERT INTO contact_messages (user_id, name, email, subject, message, status, created_at, updated_at)
-SELECT cm.user_id, cm.name, cm.email, cm.subject, cm.message, cm.status, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+INSERT INTO contact_messages (name, email, subject, message, created_at)
+SELECT cm.name, cm.email, cm.subject, cm.message, CURRENT_TIMESTAMP
 FROM (
   VALUES
-    ((SELECT id FROM users WHERE email = 'lei21014@byui.edu'), 'Appam Leisan', 'lei21014@byui.edu', 'Inventory question', 'Do you have more AWD SUVs coming this month?', 'new'),
-    ((SELECT id FROM users WHERE email = 'angie@gmail.com'),   'Angie',        'angie@gmail.com',   'Service follow-up',  'Can I reschedule my inspection appointment?',   'read'),
-    (NULL,                                                      'Guest User',   'guest@example.com',  'Financing',          'What financing options are available?',         'new')
-) AS cm(user_id, name, email, subject, message, status)
+    ('Appam Leisan', 'lei21014@byui.edu', 'Inventory question', 'Do you have more AWD SUVs coming this month?'),
+    ('Angie',        'angie@gmail.com',   'Service follow-up',  'Can I reschedule my inspection appointment?'),
+    ('Guest User',   'guest@example.com',  'Financing',          'What financing options are available?')
+) AS cm(name, email, subject, message)
 WHERE NOT EXISTS (
   SELECT 1
   FROM contact_messages x
