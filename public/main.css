@@ -25,9 +25,17 @@ body {
   font-family: Georgia, "Times New Roman", serif;
   color: var(--text);
   background:
-    radial-gradient(circle at top left, rgba(201, 106, 43, 0.22), transparent 30%),
-    radial-gradient(circle at right top, rgba(90, 130, 255, 0.16), transparent 28%),
-    linear-gradient(180deg, var(--bg), var(--bg-2));
+    linear-gradient(rgba(8, 10, 14, 0.58), rgba(8, 10, 14, 0.58)),
+    linear-gradient(
+      120deg,
+      #ff0000 0%,
+      #ff7f00 16%,
+      #ffff00 32%,
+      #00ff00 48%,
+      #00b7ff 64%,
+      #0000ff 80%,
+      #8f00ff 100%
+    );
 }
 
 .page {
