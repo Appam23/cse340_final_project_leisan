@@ -4,16 +4,41 @@
     <%- include('partials/head') %>
   </head>
   <body>
+    <%
+      const buildActivityLink = (overrides = {}) => {
+        const params = new URLSearchParams({
+          usersPage: String(usersPagination?.page || 1),
+          servicePage: String(servicePagination?.page || 1),
+          reviewsPage: String(reviewsPagination?.page || 1),
+          contactsPage: String(contactsPagination?.page || 1),
+          pageSize: String(pageSize || 5),
+        });
+
+        Object.entries(overrides).forEach(([key, value]) => {
+          params.set(key, String(value));
+        });
+
+        return `/admin/activity?${params.toString()}`;
+      };
+    %>
     <%- include('partials/header') %>
     <main class="page">
       <section class="auth-card admin-panel">
         <p class="admin-edit-banner">Owner area</p>
         <h1>System Activity</h1>
-        <p class="lead admin-panel-copy">Overview of user data and recent platform activity across all major workflows.</p>
+        <p class="lead admin-panel-copy">Overview of user data and full platform activity across all major workflows.</p>
 
         <div class="admin-actions">
           <a class="auth-button" href="/admin">Owner Dashboard</a>
           <a class="auth-button" href="/admin/users">Manage Users</a>
+        </div>
+
+        <div class="admin-actions">
+          <span class="admin-panel-copy">Rows per section:</span>
+          <a class="admin-filter-chip <%= Number(pageSize) === 5 ? 'is-active' : '' %>" href="<%= buildActivityLink({ pageSize: 5 }) %>">5</a>
+          <a class="admin-filter-chip <%= Number(pageSize) === 10 ? 'is-active' : '' %>" href="<%= buildActivityLink({ pageSize: 10 }) %>">10</a>
+          <a class="admin-filter-chip <%= Number(pageSize) === 25 ? 'is-active' : '' %>" href="<%= buildActivityLink({ pageSize: 25 }) %>">25</a>
+          <a class="admin-filter-chip <%= Number(pageSize) === 50 ? 'is-active' : '' %>" href="<%= buildActivityLink({ pageSize: 50 }) %>">50</a>
         </div>
 
         <div class="admin-table-wrap">
@@ -38,7 +63,7 @@
           </table>
         </div>
 
-        <h2 class="admin-activity-title">Recent Users</h2>
+        <h2 class="admin-activity-title">Users (<%= usersPagination.total %>)</h2>
         <div class="admin-table-wrap">
           <table class="admin-table">
             <thead>
@@ -49,10 +74,10 @@
               </tr>
             </thead>
             <tbody>
-              <% if (!recentUsers || recentUsers.length === 0) { %>
+              <% if (!users || users.length === 0) { %>
                 <tr><td colspan="3">No users found.</td></tr>
               <% } else { %>
-                <% recentUsers.forEach((user) => { %>
+                <% users.forEach((user) => { %>
                   <tr>
                     <td data-label="Name"><%= user.name || 'N/A' %></td>
                     <td data-label="Email"><%= user.email %></td>
@@ -63,8 +88,19 @@
             </tbody>
           </table>
         </div>
+        <% if (usersPagination.totalPages > 1) { %>
+          <div class="admin-pagination">
+            <% if (usersPagination.page > 1) { %>
+              <a class="admin-filter-chip" href="<%= buildActivityLink({ usersPage: usersPagination.page - 1 }) %>">Previous</a>
+            <% } %>
+            <span class="admin-panel-copy">Page <%= usersPagination.page %> of <%= usersPagination.totalPages %></span>
+            <% if (usersPagination.page < usersPagination.totalPages) { %>
+              <a class="admin-filter-chip" href="<%= buildActivityLink({ usersPage: usersPagination.page + 1 }) %>">Next</a>
+            <% } %>
+          </div>
+        <% } %>
 
-        <h2 class="admin-activity-title">Recent Service Requests</h2>
+        <h2 class="admin-activity-title">Service Requests (<%= servicePagination.total %>)</h2>
         <div class="admin-table-wrap">
           <table class="admin-table">
             <thead>
@@ -76,10 +112,10 @@
               </tr>
             </thead>
             <tbody>
-              <% if (!recentServiceRequests || recentServiceRequests.length === 0) { %>
+              <% if (!serviceRequests || serviceRequests.length === 0) { %>
                 <tr><td colspan="4">No service requests found.</td></tr>
               <% } else { %>
-                <% recentServiceRequests.forEach((request) => { %>
+                <% serviceRequests.forEach((request) => { %>
                   <tr>
                     <td data-label="Customer"><%= request.user_name || 'N/A' %></td>
                     <td data-label="Vehicle"><%= request.vehicle_name || 'Unassigned vehicle' %></td>
@@ -91,8 +127,19 @@
             </tbody>
           </table>
         </div>
+        <% if (servicePagination.totalPages > 1) { %>
+          <div class="admin-pagination">
+            <% if (servicePagination.page > 1) { %>
+              <a class="admin-filter-chip" href="<%= buildActivityLink({ servicePage: servicePagination.page - 1 }) %>">Previous</a>
+            <% } %>
+            <span class="admin-panel-copy">Page <%= servicePagination.page %> of <%= servicePagination.totalPages %></span>
+            <% if (servicePagination.page < servicePagination.totalPages) { %>
+              <a class="admin-filter-chip" href="<%= buildActivityLink({ servicePage: servicePagination.page + 1 }) %>">Next</a>
+            <% } %>
+          </div>
+        <% } %>
 
-        <h2 class="admin-activity-title">Recent Reviews</h2>
+        <h2 class="admin-activity-title">Reviews (<%= reviewsPagination.total %>)</h2>
         <div class="admin-table-wrap">
           <table class="admin-table">
             <thead>
@@ -104,10 +151,10 @@
               </tr>
             </thead>
             <tbody>
-              <% if (!recentReviews || recentReviews.length === 0) { %>
+              <% if (!reviews || reviews.length === 0) { %>
                 <tr><td colspan="4">No reviews found.</td></tr>
               <% } else { %>
-                <% recentReviews.forEach((review) => { %>
+                <% reviews.forEach((review) => { %>
                   <tr>
                     <td data-label="Customer"><%= review.user_name || 'N/A' %></td>
                     <td data-label="Vehicle"><%= review.vehicle_name || 'Unknown vehicle' %></td>
@@ -119,8 +166,19 @@
             </tbody>
           </table>
         </div>
+        <% if (reviewsPagination.totalPages > 1) { %>
+          <div class="admin-pagination">
+            <% if (reviewsPagination.page > 1) { %>
+              <a class="admin-filter-chip" href="<%= buildActivityLink({ reviewsPage: reviewsPagination.page - 1 }) %>">Previous</a>
+            <% } %>
+            <span class="admin-panel-copy">Page <%= reviewsPagination.page %> of <%= reviewsPagination.totalPages %></span>
+            <% if (reviewsPagination.page < reviewsPagination.totalPages) { %>
+              <a class="admin-filter-chip" href="<%= buildActivityLink({ reviewsPage: reviewsPagination.page + 1 }) %>">Next</a>
+            <% } %>
+          </div>
+        <% } %>
 
-        <h2 class="admin-activity-title">Recent Contact Messages</h2>
+        <h2 class="admin-activity-title">Contact Messages (<%= contactsPagination.total %>)</h2>
         <div class="admin-table-wrap">
           <table class="admin-table">
             <thead>
@@ -132,10 +190,10 @@
               </tr>
             </thead>
             <tbody>
-              <% if (!recentContactMessages || recentContactMessages.length === 0) { %>
+              <% if (!contactMessages || contactMessages.length === 0) { %>
                 <tr><td colspan="4">No contact messages found.</td></tr>
               <% } else { %>
-                <% recentContactMessages.forEach((entry) => { %>
+                <% contactMessages.forEach((entry) => { %>
                   <tr>
                     <td data-label="Name"><%= entry.name %></td>
                     <td data-label="Email"><%= entry.email %></td>
@@ -147,6 +205,17 @@
             </tbody>
           </table>
         </div>
+        <% if (contactsPagination.totalPages > 1) { %>
+          <div class="admin-pagination">
+            <% if (contactsPagination.page > 1) { %>
+              <a class="admin-filter-chip" href="<%= buildActivityLink({ contactsPage: contactsPagination.page - 1 }) %>">Previous</a>
+            <% } %>
+            <span class="admin-panel-copy">Page <%= contactsPagination.page %> of <%= contactsPagination.totalPages %></span>
+            <% if (contactsPagination.page < contactsPagination.totalPages) { %>
+              <a class="admin-filter-chip" href="<%= buildActivityLink({ contactsPage: contactsPagination.page + 1 }) %>">Next</a>
+            <% } %>
+          </div>
+        <% } %>
       </section>
     </main>
     <%- include('partials/footer') %>

@@ -45,6 +45,37 @@
               <p class="detail-price"><%= car.price %></p>
               <p class="detail-copy">This is a live listing preview built from the car gallery shown on the home page.</p>
 
+              <% if (car.specs) { %>
+                <div class="detail-specs">
+                  <p class="detail-label">Vehicle Specs</p>
+                  <dl class="detail-spec-grid">
+                    <div>
+                      <dt>Category</dt>
+                      <dd><%= car.specs.category || 'N/A' %></dd>
+                    </div>
+                    <div>
+                      <dt>Year</dt>
+                      <dd><%= car.specs.year || 'N/A' %></dd>
+                    </div>
+                    <div>
+                      <dt>Make / Model</dt>
+                      <dd><%= [car.specs.make, car.specs.model].filter(Boolean).join(' ') || 'N/A' %></dd>
+                    </div>
+                    <div>
+                      <dt>Mileage</dt>
+                      <dd><%= car.specs.mileage != null ? `${Number(car.specs.mileage).toLocaleString('en-US')} mi` : 'N/A' %></dd>
+                    </div>
+                    <div>
+                      <dt>Availability</dt>
+                      <dd><%= car.specs.availability || 'N/A' %></dd>
+                    </div>
+                  </dl>
+                  <% if (car.specs.description) { %>
+                    <p class="detail-copy"><%= car.specs.description %></p>
+                  <% } %>
+                </div>
+              <% } %>
+
               <form class="auth-form detail-form" action="/cars/<%= car.id %>" method="post">
                 <div class="field rating-field">
                   <span>Star Rating</span>

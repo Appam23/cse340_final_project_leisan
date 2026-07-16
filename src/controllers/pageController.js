@@ -155,6 +155,16 @@ const formatVehiclePrice = (price) => {
   }).format(price);
 };
 
+const buildVehicleSpecs = (vehicle = {}) => ({
+  year: vehicle.year ?? null,
+  make: vehicle.make ?? null,
+  model: vehicle.model ?? null,
+  mileage: vehicle.mileage ?? null,
+  availability: typeof vehicle.availability === 'boolean' ? (vehicle.availability ? 'Available' : 'Unavailable') : null,
+  description: vehicle.description || '',
+  category: vehicle.category_name || null,
+});
+
 const buildInquiryViewModel = async (req, carId, overrides = {}) => {
   let car = findShowcaseCar(req, carId);
 
@@ -176,6 +186,7 @@ const buildInquiryViewModel = async (req, carId, overrides = {}) => {
       image_url: resolvedImage,
       attribution: 'Inventory listing',
       price: formatVehiclePrice(vehicle.price),
+      specs: buildVehicleSpecs(vehicle),
     };
   }
 

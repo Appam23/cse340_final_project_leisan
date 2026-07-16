@@ -284,6 +284,20 @@
   font-size: 0.95rem;
 }
 
+.admin-activity-title {
+  margin-top: 34px;
+  margin-bottom: 0;
+  color: #ffe5dc;
+}
+
+.admin-pagination {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .inventory-row-actions {
   display: flex;
   flex-wrap: wrap;

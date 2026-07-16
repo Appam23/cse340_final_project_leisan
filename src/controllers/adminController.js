@@ -34,6 +34,10 @@ import { getVehicleImageFromApi } from '../services/vehicleImageService.js';
 
 const normalizeField = (value) => (value || '').trim();
 const normalizeNumber = (value) => Number(String(value || '').trim());
+const toPositiveInt = (value, fallback) => {
+  const parsed = Number.parseInt(String(value || ''), 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+};
 const PLACEHOLDER_IMAGE = '/images/car.png';
 const ABSOLUTE_HTTP_URL = /^https?:\/\//i;
 const ADMIN_USER_ROLE_FILTERS = new Set(['customer', 'employee', 'owner']);
@@ -344,15 +348,32 @@ export const postDeleteCategory = async (req, res, next) => {
 
 export const getAdminActivity = async (req, res, next) => {
   try {
-    const overview = await getSystemOverview();
+    const usersPage = toPositiveInt(req.query.usersPage, 1);
+    const servicePage = toPositiveInt(req.query.servicePage, 1);
+    const reviewsPage = toPositiveInt(req.query.reviewsPage, 1);
+    const contactsPage = toPositiveInt(req.query.contactsPage, 1);
+    const pageSize = toPositiveInt(req.query.pageSize, 5);
+
+    const overview = await getSystemOverview({
+      usersPage,
+      servicePage,
+      reviewsPage,
+      contactsPage,
+      pageSize,
+    });
 
     res.render('admin-activity', {
       title: 'System Activity',
       summary: overview.summary,
-      recentUsers: overview.recentUsers,
-      recentServiceRequests: overview.recentServiceRequests,
-      recentReviews: overview.recentReviews,
-      recentContactMessages: overview.recentContactMessages,
+      users: overview.users,
+      usersPagination: overview.usersPagination,
+      serviceRequests: overview.serviceRequests,
+      servicePagination: overview.servicePagination,
+      reviews: overview.reviews,
+      reviewsPagination: overview.reviewsPagination,
+      contactMessages: overview.contactMessages,
+      contactsPagination: overview.contactsPagination,
+      pageSize,
       adminStyles: true,
     });
   } catch (error) {

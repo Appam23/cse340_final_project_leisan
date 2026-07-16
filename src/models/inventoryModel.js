@@ -366,6 +366,7 @@ export async function getVehicleById(id) {
     SELECT
       v.id,
       v.category_id,
+      c.name AS category_name,
       v.year,
       v.make,
       v.model,
@@ -376,6 +377,8 @@ export async function getVehicleById(id) {
       vi.image_url AS raw_image_url,
       ${vehicleImageSelect}
     FROM vehicles v
+    LEFT JOIN categories c
+      ON c.id = v.category_id
     LEFT JOIN vehicle_images vi
       ON vi.vehicle_id = v.id
      AND vi.is_primary = true

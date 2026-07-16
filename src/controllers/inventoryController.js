@@ -148,6 +148,15 @@ export async function vehicleDetail(req, res, next) {
         currency: 'USD',
         maximumFractionDigits: 0,
       }).format(vehicle.price) : 'Contact for price',
+      specs: {
+        year: vehicle.year ?? null,
+        make: vehicle.make ?? null,
+        model: vehicle.model ?? null,
+        mileage: vehicle.mileage ?? null,
+        availability: typeof vehicle.availability === 'boolean' ? (vehicle.availability ? 'Available' : 'Unavailable') : null,
+        description: vehicle.description || '',
+        category: vehicle.category_name || null,
+      },
     };
 
     return res.render('car-review', {
