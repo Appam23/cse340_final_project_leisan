@@ -106,6 +106,39 @@ The app is deployed on Render as a Node.js web service backed by PostgreSQL, not
 
 Live demo: https://cse340-final-project-leisan.onrender.com
 
+## ERD Diagram
+![ERD Diagram](docs/erd.png)
+
+## User Roles
+
+### 1) Guest (Not Logged In)
+- Browse vehicle listings and view vehicle details
+- View approved reviews
+- Submit contact messages
+- Cannot create reviews or service requests until logged in
+
+### 2) Customer (Logged In User)
+- All Guest permissions, plus:
+- Create, edit, and delete their own reviews
+- Submit service requests for vehicles
+- View their own service request history/status
+- Manage their account/profile information
+
+### 3) Employee (Staff)
+- Moderate customer reviews (approve/hide/edit as allowed)
+- View and manage contact messages
+- Update service request status (e.g., Submitted, In Progress, Completed)
+- Add internal notes on service requests
+- Update certain vehicle information (based on permissions)
+
+### 4) Owner/Admin
+- Full system access
+- Add, edit, and delete vehicle categories
+- Add, edit, and delete vehicles
+- Manage users/roles (if implemented)
+- Perform all Employee actions
+- Monitor activity logs and overall system administration
+
 ## Author
 
 Appam Leisan
