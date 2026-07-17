@@ -139,6 +139,19 @@ Live demo: https://cse340-final-project-leisan.onrender.com
 - Perform all Employee actions
 - Monitor activity logs and overall system administration
 
+  ## Known Limitations
+
+- Audio/video upload and in-app media management are not implemented.
+- No online payment processing is included.
+- Service request notifications (email/SMS) are not automated.
+- Advanced search/filter (multi-criteria + saved filters) is limited.
+- Role permissions are implemented but can be further refined to more granular access control.
+- Activity log coverage is partial (not every action is logged yet).
+- Form validation is mostly server-side; some client-side validation can be improved.
+- Error messages are functional but not fully user-friendly in all edge cases.
+- UI is optimized for common laptop/mobile sizes, but some pages need better responsiveness on very small screens.
+- Seed/demo data is limited and may not represent all real-world scenarios.
+
 ## Author
 
 Appam Leisan
