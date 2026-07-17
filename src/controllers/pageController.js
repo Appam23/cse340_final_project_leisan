@@ -457,7 +457,6 @@ export const postServiceRequest = async (req, res, next) => {
     await createServiceRequest({
       userId,
       vehicleId: viewModel.car.id,
-      requestType: serviceType,
       serviceType: SERVICE_TYPE_LABELS[serviceType],
       notes,
     });
