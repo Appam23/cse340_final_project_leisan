@@ -86,7 +86,7 @@ export const getSystemOverview = async ({
       `SELECT
         r.id,
         r.rating,
-        COALESCE(NULLIF(r.comment, ''), r.body) AS comment,
+        r.comment,
         r.created_at,
         u.name AS user_name,
         CONCAT_WS(' ', v.year, v.make, v.model) AS vehicle_name

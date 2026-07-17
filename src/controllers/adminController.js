@@ -325,6 +325,28 @@ export const getAdminActivity = async (req, res, next) => {
     const reviewsPage = toPositiveInt(req.query.reviewsPage, 1);
     const contactsPage = toPositiveInt(req.query.contactsPage, 1);
     const pageSize = toPositiveInt(req.query.pageSize, 5);
+    const buildActivityLink = (overrides = {}) => {
+      const nextQuery = {
+        usersPage,
+        servicePage,
+        reviewsPage,
+        contactsPage,
+        pageSize,
+        ...overrides,
+      };
+
+      const search = new URLSearchParams();
+
+      Object.entries(nextQuery).forEach(([key, value]) => {
+        if (value == null || value === '') {
+          return;
+        }
+
+        search.set(key, String(value));
+      });
+
+      return `/admin/activity?${search.toString()}`;
+    };
 
     const overview = await getSystemOverview({
       usersPage,
@@ -346,6 +368,7 @@ export const getAdminActivity = async (req, res, next) => {
       contactMessages: overview.contactMessages,
       contactsPagination: overview.contactsPagination,
       pageSize,
+      buildActivityLink,
       adminStyles: true,
     });
   } catch (error) {
