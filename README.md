@@ -152,6 +152,16 @@ Live demo: https://cse340-final-project-leisan.onrender.com
 - UI is optimized for common laptop/mobile sizes, but some pages need better responsiveness on very small screens.
 - Seed/demo data is limited and may not represent all real-world scenarios.
 
+- ## Demo Accounts
+
+- Admin: lei@21014@byui.edu
+	Password: Musicbyui@2026
+- Employee: angie@gmail.com
+	Password: Angie@2026
+- User: jonh@gmail.com
+	Password: John@2026
+
+
 ## Author
 
 Appam Leisan
