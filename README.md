@@ -152,25 +152,11 @@ Live demo: https://cse340-final-project-leisan.onrender.com
 - Error messages are functional but not fully user-friendly in all edge cases.
 - UI is optimized for common laptop/mobile sizes, but some pages need better responsiveness on very small screens.
 - Seed/demo data is limited and may not represent all real-world scenarios.
-=======
+
 ## Demo Accounts
-
-	Password: Musicbyui@2026
-	Password: Angie@2026
-	Password: John@2026
- Admin: lei@21014@byui.edu
-	Password: Musicbyui@2026
->>>>>>> ee8d4e8 (Added info in README)
-
-- ## Demo Accounts
 
 - Admin: lei@21014@byui.edu
 	Password: Musicbyui@2026
-- Employee: angie@gmail.com
-	Password: Angie@2026
-- User: jonh@gmail.com
-	Password: John@2026
-
 
 ## Author
 
